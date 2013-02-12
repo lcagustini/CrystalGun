@@ -1,4 +1,4 @@
 CrystalGun
 ==========
 
-Crystal Gun mod Repository
+Welcome to the Crystal Gun Mod Repository!
