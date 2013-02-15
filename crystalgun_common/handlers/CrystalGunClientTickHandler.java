@@ -17,6 +17,7 @@ import java.util.EnumSet;
 
 import torresmon235.crystalgun.models.ModelCoreExtractor;
 
+import net.minecraft.block.BlockSponge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import cpw.mods.fml.common.ITickHandler;
@@ -61,7 +62,7 @@ public class CrystalGunClientTickHandler implements ITickHandler
 
     public void onRenderTick()
     {
-        model.Crystal1.rotateAngleX += 0.001F;
+        model.Crystal1.rotateAngleX += 0.005F;
         model.Crystal1.rotateAngleY += 0.025F;
         model.Crystal1.rotateAngleZ += 0.012F;
     }
@@ -74,7 +75,6 @@ public class CrystalGunClientTickHandler implements ITickHandler
 
     public void onTickInGame()
     {
-        //System.out.println("onTickInGame");
-        //TODO: Your Code Here
+    	
     }
 }

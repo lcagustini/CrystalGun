@@ -14,6 +14,7 @@
 package torresmon235.crystalgun.turrets;
 
 import torresmon235.crystalgun.common.CrystalGunMain;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.IRangedAttackMob;
@@ -21,6 +22,7 @@ import net.minecraft.entity.ai.EntityAIArrowAttack;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.ai.EntityAIWatchClosest2;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,7 +31,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class TurretWooden extends EntityCreature implements IRangedAttackMob
+public class TurretWooden extends TurretParent implements IRangedAttackMob
 {
     private EntityAIArrowAttack field_85037_d = new EntityAIArrowAttack(this, 0F, 10, 10.0F);
 	
@@ -37,9 +39,9 @@ public class TurretWooden extends EntityCreature implements IRangedAttackMob
 	{
 		super(world);
 		this.texture = "/torresmon235/crystalgun/textures/wooden.png";
-        this.tasks.addTask(2, new EntityAIWatchClosest(this, EntityLiving.class, 16.0F));
+        this.tasks.addTask(2, new EntityAIWatchClosest2(this, EntityLiving.class, 32.0F, 0.02F));
         this.targetTasks.addTask(0, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityLiving.class, 16.0F, 0, true));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityLiving.class, 32.0F, 0, false));
 	}
 	
 	protected void entityInit()
@@ -71,6 +73,11 @@ public class TurretWooden extends EntityCreature implements IRangedAttackMob
 		return 8;
 	}
 	
+	protected int decreaseAirSupply(int par1)
+    {
+        return par1;
+    }
+	
 	protected void dropFewItems(boolean par1, int par2)
     {
 		if(CrystalGunMain.EggDrop)
@@ -83,7 +90,7 @@ public class TurretWooden extends EntityCreature implements IRangedAttackMob
     {
 		if(par1EntityLiving.canEntityBeSeen(this))
 		{
-			EntityArrow var2 = new EntityArrow(this.worldObj, this, par1EntityLiving, 1F, 12F);
+			EntityArrow var2 = new EntityArrow(this.worldObj, this, par1EntityLiving, 1F, 9F);
 			this.playSound("random.bow", 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
 			this.worldObj.spawnEntityInWorld(var2);
 		}

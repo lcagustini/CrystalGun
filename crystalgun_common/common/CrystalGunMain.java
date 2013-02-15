@@ -14,6 +14,11 @@
 package torresmon235.crystalgun.common;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -25,10 +30,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemReed;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
+import torresmon235.crystalgun.blocks.BlockCGSponge;
 import torresmon235.crystalgun.blocks.BlockCoreExtractor;
+import torresmon235.crystalgun.blocks.BlockCrystalBlock;
 import torresmon235.crystalgun.entities.EntityAir;
 import torresmon235.crystalgun.entities.EntityFire;
 import torresmon235.crystalgun.entities.EntityGrass;
+import torresmon235.crystalgun.entities.EntityHealing;
 import torresmon235.crystalgun.entities.EntityIce;
 import torresmon235.crystalgun.entities.EntityLife;
 import torresmon235.crystalgun.entities.EntityPoison;
@@ -37,6 +45,7 @@ import torresmon235.crystalgun.entities.EntityWater;
 import torresmon235.crystalgun.entities.ParticleAir;
 import torresmon235.crystalgun.entities.ParticleFire;
 import torresmon235.crystalgun.entities.ParticleGrass;
+import torresmon235.crystalgun.entities.ParticleHealing;
 import torresmon235.crystalgun.entities.ParticleIce;
 import torresmon235.crystalgun.entities.ParticleLife;
 import torresmon235.crystalgun.entities.ParticlePoison;
@@ -44,12 +53,15 @@ import torresmon235.crystalgun.entities.ParticleSand;
 import torresmon235.crystalgun.entities.ParticleWater;
 import torresmon235.crystalgun.handlers.CrystalGunClientPacketHandler;
 import torresmon235.crystalgun.handlers.CrystalGunExtractorHandler;
+import torresmon235.crystalgun.handlers.CrystalGunGuiHandler;
 import torresmon235.crystalgun.handlers.CrystalGunServerPacketHandler;
 import torresmon235.crystalgun.items.ItemCrystal;
+import torresmon235.crystalgun.items.ItemCrystalBlock;
 import torresmon235.crystalgun.items.ItemCrystalGun;
 import torresmon235.crystalgun.items.ItemCrystalGunAir;
 import torresmon235.crystalgun.items.ItemCrystalGunFire;
 import torresmon235.crystalgun.items.ItemCrystalGunGrass;
+import torresmon235.crystalgun.items.ItemCrystalGunHealing;
 import torresmon235.crystalgun.items.ItemCrystalGunIce;
 import torresmon235.crystalgun.items.ItemCrystalGunLife;
 import torresmon235.crystalgun.items.ItemCrystalGunPoison;
@@ -57,6 +69,7 @@ import torresmon235.crystalgun.items.ItemCrystalGunSand;
 import torresmon235.crystalgun.items.ItemCrystalGunWater;
 import torresmon235.crystalgun.render.RenderCoreExtractor;
 import torresmon235.crystalgun.tileentities.TileEntityCoreExtractor;
+import torresmon235.crystalgun.turrets.TurretIron;
 import torresmon235.crystalgun.turrets.TurretStone;
 import torresmon235.crystalgun.turrets.TurretWooden;
 import cpw.mods.fml.common.Mod;
@@ -70,11 +83,12 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod(modid = "crystalgun", name = "Crystal Gun", version = "0.3beta")
+@Mod(modid = "crystalgun", name = "Crystal Gun", version = "0.4beta")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec =
 @SidedPacketHandler(channels = {"CrystalGunMain"}, packetHandler = CrystalGunClientPacketHandler.class),
@@ -103,11 +117,15 @@ public class CrystalGunMain
 	public int CrystalGunLifeID;
 	public int CrystalGunGrassID;
 	public int CrystalGunPoisonID;
+	public int CrystalGunHealingID;
 	public int CoreExtractorID;
 	public int CoreExtractorItemID;
 	public int CrystalID;
 	public int IronBrainID;
 	public int GoldenBrainID;
+	public int DiamondBrainID;
+	public int CrystalBlockID;
+	public int CGSpongeID;
 	public static boolean EggDrop;
 	
 	//CrystalGuns
@@ -120,15 +138,19 @@ public class CrystalGunMain
 	public static Item CrystalGunLife;
 	public static Item CrystalGunGrass;
 	public static Item CrystalGunPoison;
+	public static Item CrystalGunHealing;
 	
 	//Blocks
 	public static Block CoreExtractor;
+	public static Block CrystalBlock;
+	public static Block CGSponge;
 	
 	//Items
 	public static Item Crystal;
 	public static Item CoreExtractorItem;
 	public static Item IronBrain;
 	public static Item GoldenBrain;
+	public static Item DiamondBrain;
 	
 	public static int startEntityId = 300;
 	public static CreativeTabs crystalGunTab = new CrystalGunCreativeTab("crystalGunTab");
@@ -136,35 +158,47 @@ public class CrystalGunMain
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event) 
 	{
+		copyResource("/torresmon235/crystalgun/sounds/shot.ogg", mc.mcDataDir + "/resources/torresmon235/crystalgun/", "shot.ogg");
+		copyResource("/torresmon235/crystalgun/sounds/craft.ogg", mc.mcDataDir + "/resources/torresmon235/crystalgun/", "craft.ogg");
+		
+		mc.installResource("sound3/crystalgun/shot.ogg", new File(mc.mcDataDir, "resources/torresmon235/crystalgun/shot.ogg"));
+        mc.installResource("sound3/crystalgun/craft.ogg", new File(mc.mcDataDir, "resources/torresmon235/crystalgun/craft.ogg"));
+		System.out.println("Resources installed");
+		
         Configuration config = new Configuration(event.getSuggestedConfigurationFile());
         
         config.load();
         
-        CrystalGunID = config.getItem("Crystal Gun ID", 600).getInt();
-        CrystalGunWaterID = config.getItem("Crystal Gun ID (Water)", 601).getInt();
-        CrystalGunFireID = config.getItem("Crystal Gun ID (Fire)", 602).getInt();
-        CrystalGunSandID = config.getItem("Crystal Gun ID (Sand)", 603).getInt();
-        CrystalGunAirID = config.getItem("Crystal Gun ID (Ait)", 604).getInt();
-        CrystalGunIceID = config.getItem("Crystal Gun ID (Ice)", 605).getInt();
-        CrystalGunLifeID = config.getItem("Crystal Gun ID (Life)", 606).getInt();
-        CrystalGunGrassID = config.getItem("Crystal Gun ID (Grass)", 607).getInt();
-        CrystalGunPoisonID = config.getItem("Crystal Gun ID (Poison)", 608).getInt();
-        CrystalID = config.getItem("Crystals ID", 609).getInt();
-        CoreExtractorItemID = config.getItem("Core Extractor ID (Item)", 610).getInt();
-        IronBrainID = config.getItem("Iron Brain ID", 611).getInt();
-        GoldenBrainID = config.getItem("Golden Brain ID", 612).getInt();
+        CrystalGunID = config.getItem("Crystal Gun ID", 13330).getInt();
+        CrystalGunWaterID = config.getItem("Crystal Gun ID (Water)", 13331).getInt();
+        CrystalGunFireID = config.getItem("Crystal Gun ID (Fire)", 13332).getInt();
+        CrystalGunSandID = config.getItem("Crystal Gun ID (Sand)", 13333).getInt();
+        CrystalGunAirID = config.getItem("Crystal Gun ID (Ait)", 13334).getInt();
+        CrystalGunIceID = config.getItem("Crystal Gun ID (Ice)", 13335).getInt();
+        CrystalGunLifeID = config.getItem("Crystal Gun ID (Life)", 13336).getInt();
+        CrystalGunGrassID = config.getItem("Crystal Gun ID (Grass)", 13337).getInt();
+        CrystalGunPoisonID = config.getItem("Crystal Gun ID (Poison)", 13338).getInt();
+        CrystalGunHealingID = config.getItem("Crystal Gun ID (Healing)", 13339).getInt();
+        CrystalID = config.getItem("Crystals ID", 13350).getInt();
+        CoreExtractorItemID = config.getItem("Core Extractor ID (Item)", 13351).getInt();
+        IronBrainID = config.getItem("Iron Brain ID", 13352).getInt();
+        GoldenBrainID = config.getItem("Golden Brain ID", 13353).getInt();
+        DiamondBrainID = config.getItem("Diamond Brain ID", 13354).getInt();
         CoreExtractorID = config.getBlock("Core Extractor ID", 600).getInt();
+        CrystalBlockID = config.getBlock("Crystal Block ID", 601).getInt();
+        CGSpongeID = config.getBlock("Sponge ID", 602).getInt();
         EggDrop = config.get(Configuration.CATEGORY_GENERAL, "Turrets should drop eggs", true).getBoolean(false);
 
         config.save();
-
-        mc.installResource("sound3/crystalgun/shot.ogg", new File(mc.mcDataDir, "resources/torresmon235/crystalgun/shot.ogg"));
-        mc.installResource("sound3/crystalgun/craft.ogg", new File(mc.mcDataDir, "resources/torresmon235/crystalgun/craft.ogg"));
+        System.out.println("Configuration Succesful");
 	}
 
 	@Init
 	public void init(FMLInitializationEvent event) 
 	{
+		//GUI
+		NetworkRegistry.instance().registerGuiHandler(instance, new CrystalGunGuiHandler());
+
 		//Creative Tab
 		LanguageRegistry.instance().addStringLocalization("itemGroup.crystalGunTab", "en_US", "Crystal Gun");
 		
@@ -191,6 +225,8 @@ public class CrystalGunMain
 		EntityRegistry.registerModEntity(ParticleSand.class, "ParticleSand", 14, this, 100, 1, true);
 		EntityRegistry.registerModEntity(EntityWater.class, "Water", 15, this, 100, 1, true);
 		EntityRegistry.registerModEntity(ParticleWater.class, "ParticleWater", 16, this, 100, 1, true);
+		EntityRegistry.registerModEntity(EntityHealing.class, "Healing", 20, this, 100, 1, true);
+		EntityRegistry.registerModEntity(ParticleHealing.class, "ParticleHealing", 21, this, 100, 1, true);
 		
 		EntityRegistry.registerModEntity(TurretWooden.class, "WoodenTurret", 17, this, 100, 1, true);
 		LanguageRegistry.instance().addStringLocalization("entity.crystalgun.WoodenTurret.name", "Wooden Turret");
@@ -199,12 +235,32 @@ public class CrystalGunMain
 		EntityRegistry.registerModEntity(TurretStone.class, "StoneTurret", 18, this, 100, 1, true);
 		LanguageRegistry.instance().addStringLocalization("entity.crystalgun.StoneTurret.name", "Stone Turret");
 		registerEntityEgg(TurretStone.class, 0x999999, 0xFFFFFF);
+		
+		EntityRegistry.registerModEntity(TurretIron.class, "IronTurret", 19, this, 100, 1, true);
+		LanguageRegistry.instance().addStringLocalization("entity.crystalgun.IronTurret.name", "Iron Turret");
+		registerEntityEgg(TurretIron.class, 0xF5F5F5, 0xBFBFBF);
 
 		//Blocks
 		CoreExtractor = (new BlockCoreExtractor(CoreExtractorID, 9, torresmon235.crystalgun.tileentities.TileEntityCoreExtractor.class)).setHardness(3F)
 				.setResistance(30F).setStepSound(Block.soundStoneFootstep).setBlockName("CoreExtractor");
 		LanguageRegistry.addName(CoreExtractor, "Core Extractor");
 		GameRegistry.registerBlock(CoreExtractor, "CoreExtractor");
+		
+		CrystalBlock = new BlockCrystalBlock(CrystalBlockID);
+		GameRegistry.registerBlock(CrystalBlock, ItemCrystalBlock.class, "CrystalBlock");
+		LanguageRegistry.addName(new ItemStack(CrystalBlock, 1, 2), "Air Crystal Block");
+		LanguageRegistry.addName(new ItemStack(CrystalBlock, 1, 1), "Fire Crystal Block");
+		LanguageRegistry.addName(new ItemStack(CrystalBlock, 1, 6), "Grass Crystal Block");
+		LanguageRegistry.addName(new ItemStack(CrystalBlock, 1, 3), "Ice Crystal Block");
+		LanguageRegistry.addName(new ItemStack(CrystalBlock, 1, 5), "Life Crystal Block");
+		LanguageRegistry.addName(new ItemStack(CrystalBlock, 1, 7), "Poison Crystal Block");
+		LanguageRegistry.addName(new ItemStack(CrystalBlock, 1, 4), "Sand Crystal Block");
+		LanguageRegistry.addName(new ItemStack(CrystalBlock, 1, 0), "Water Crystal Block");
+		LanguageRegistry.addName(new ItemStack(CrystalBlock, 1, 8), "Healing Crystal Block");
+		
+		CGSponge = new BlockCGSponge(CGSpongeID).setHardness(0.6F).setStepSound(Block.soundGrassFootstep).setBlockName("CGSponge");
+		LanguageRegistry.addName(CGSponge, "Sponge");
+		GameRegistry.registerBlock(CGSponge, "Sponge");
 
 		//Items
 		CrystalGun = new ItemCrystalGun(CrystalGunID).setItemName("CrystalGun").setIconIndex(12);
@@ -242,6 +298,10 @@ public class CrystalGunMain
 				.setItemName("CrystalGunPoison").setIconIndex(24);
 		LanguageRegistry.addName(CrystalGunPoison, "Crystal Gun");
 		
+		CrystalGunHealing = new ItemCrystalGunHealing(CrystalGunHealingID).setEffect("Potion", 0, 10, 48, 2).setName("Healing Power").setColor(255, 107, 218)
+				.setItemName("CrystalGunHealing").setIconIndex(33);
+		LanguageRegistry.addName(CrystalGunHealing, "Crystal Gun");
+		
 		Crystal = new ItemCrystal(CrystalID);
 		LanguageRegistry.addName(new ItemStack(Crystal, 1, 0), "Water Crystal");
 		LanguageRegistry.addName(new ItemStack(Crystal, 1, 1), "Fire Crystal");
@@ -251,6 +311,7 @@ public class CrystalGunMain
 		LanguageRegistry.addName(new ItemStack(Crystal, 1, 5), "Life Crystal");
 		LanguageRegistry.addName(new ItemStack(Crystal, 1, 6), "Grass Crystal");
 		LanguageRegistry.addName(new ItemStack(Crystal, 1, 7), "Poison Crystal");
+		LanguageRegistry.addName(new ItemStack(Crystal, 1, 8), "Healing Crystal");
 		
 		CoreExtractorItem = new ItemReed(CoreExtractorItemID, CoreExtractor).setIconIndex(25).setItemName("CoreExtractorItem")
 				.setCreativeTab(CrystalGunMain.crystalGunTab).setTextureFile("/torresmon235/crystalgun/textures/items.png");
@@ -264,12 +325,22 @@ public class CrystalGunMain
 				.setTextureFile("/torresmon235/crystalgun/textures/items.png");
 		LanguageRegistry.addName(GoldenBrain, "Golden Brain");
 		
+		DiamondBrain = new Item(DiamondBrainID).setIconIndex(31).setItemName("DiamondBrain").setCreativeTab(CrystalGunMain.crystalGunTab)
+				.setTextureFile("/torresmon235/crystalgun/textures/items.png");
+		LanguageRegistry.addName(DiamondBrain, "Diamond Brain");
+		
 		//Recipes
 		GameRegistry.addRecipe(new ItemStack(CoreExtractorItem, 1), new Object[] {"EIE", "GIG", "SSS", 'E', Item.emerald, 'I', Item.ingotIron, 'G', Item.ingotGold, 'S', Block.stone});
-		GameRegistry.addRecipe(new ItemStack(Block.sponge), new Object[] {"YSY", "SBS", "YSY", 'Y', new ItemStack(Block.cloth, 1, 4), 'S', new ItemStack(Item.dyePowder, 1, 0), 'B', Item.bucketEmpty});
-		GameRegistry.addRecipe(new ItemStack(CrystalGun, 1), new Object[] {"GI ", "IEI", "SIO", 'G', Block.glass, 'I', Item.ingotGold, 'E', Item.eyeOfEnder, 'S', Block.sponge, 'O', Block.obsidian});
+		GameRegistry.addRecipe(new ItemStack(CGSponge), new Object[] {"YSY", "SBS", "YSY", 'Y', new ItemStack(Block.cloth, 1, 4), 'S', new ItemStack(Item.dyePowder, 1, 0), 'B', Item.bucketEmpty});
+		GameRegistry.addRecipe(new ItemStack(CrystalGun, 1), new Object[] {"GI ", "IEI", "SIO", 'G', Block.glass, 'I', Item.ingotGold, 'E', Item.eyeOfEnder, 'S', CGSponge, 'O', Block.obsidian});
 		GameRegistry.addRecipe(new ItemStack(Item.monsterPlacer, 1, 301), new Object[] {"WBW", " W ", "WWW", 'W', Block.wood, 'B', IronBrain});
-		GameRegistry.addRecipe(new ItemStack(Item.monsterPlacer, 1, 302), new Object[] {"SBS", " S ", "SSS", 'S', Block.stone, 'B', GoldenBrain});
+		GameRegistry.addRecipe(new ItemStack(Item.monsterPlacer, 1, 302), new Object[] {"SBS", " S ", "QQQ", 'S', Block.stone, 'B', GoldenBrain, 'Q', Block.stoneBrick});
+		GameRegistry.addRecipe(new ItemStack(Item.monsterPlacer, 1, 303), new Object[] {"IBI", " S ", "QIQ", 'S', Item.stick, 'B', DiamondBrain, 'I', Item.ingotIron, 'Q', Block.blockSteel});
+		for(int i = 0; i < 8; i++)
+		{
+			GameRegistry.addRecipe(new ItemStack(CrystalBlock, 1, i), new Object[] {"CC", "CC", 'C', new ItemStack(Crystal, 1, i)});
+			GameRegistry.addRecipe(new ItemStack(Crystal, 4, i), new Object[] {"C", 'C', new ItemStack(CrystalBlock, 1, i)});
+		}
 		
 		CrystalGunExtractorHandler.addRecipe(Item.coal, new ItemStack(Crystal, 1, 1));
 		CrystalGunExtractorHandler.addRecipe(Item.blazePowder, new ItemStack(Crystal, 1, 1));
@@ -282,6 +353,7 @@ public class CrystalGunMain
 		CrystalGunExtractorHandler.addRecipe(new ItemStack(Block.sand).getItem(), new ItemStack(Crystal, 1, 4));
 		CrystalGunExtractorHandler.addRecipe(Item.appleRed, new ItemStack(Crystal, 1, 5));
 		CrystalGunExtractorHandler.addRecipe(Item.seeds, new ItemStack(Crystal, 1, 6));
+		CrystalGunExtractorHandler.addRecipe(Item.cookie, new ItemStack(Crystal, 1, 8));
 		CrystalGunExtractorHandler.addRecipe(CrystalGunAir, new ItemStack(CrystalGun, 1));
 		CrystalGunExtractorHandler.addRecipe(CrystalGunFire, new ItemStack(CrystalGun, 1));
 		CrystalGunExtractorHandler.addRecipe(CrystalGunWater, new ItemStack(CrystalGun, 1));
@@ -292,6 +364,7 @@ public class CrystalGunMain
 		CrystalGunExtractorHandler.addRecipe(CrystalGunPoison, new ItemStack(CrystalGun, 1));
 		CrystalGunExtractorHandler.addRecipe(Item.ingotIron, new ItemStack(IronBrain, 1));
 		CrystalGunExtractorHandler.addRecipe(Item.ingotGold, new ItemStack(GoldenBrain, 1));
+		CrystalGunExtractorHandler.addRecipe(Item.diamond, new ItemStack(DiamondBrain, 1));
 	}
 	
 	public static int getUniqueEntityId() 
@@ -310,6 +383,34 @@ public class CrystalGunMain
 		int id = getUniqueEntityId();
 		EntityList.IDtoClassMapping.put(id, entity);
 		EntityList.entityEggs.put(id, new EntityEggInfo(id, primaryColor, secondaryColor));
+	}
+	
+	public void copyResource(String input, String outputDirectory, String outputFile)
+	{
+		if((new File(outputDirectory)).mkdirs())
+		{
+			System.out.println("Created Directory");
+		}
+		InputStream stream = CrystalGunMain.class.getResourceAsStream(input);
+	    if (stream == null) 
+	    {
+	        System.out.println("Resources copying failed");
+	    }
+	    OutputStream resStreamOut;
+	    int readBytes;
+	    byte[] buffer = new byte[4096];
+	    try 
+	    {
+	        resStreamOut = new FileOutputStream(new File(outputDirectory + outputFile));
+	        while ((readBytes = stream.read(buffer)) > 0) 
+	        {
+	            resStreamOut.write(buffer, 0, readBytes);
+	        }
+	    } 
+	    catch (IOException e1) 
+	    {
+	        e1.printStackTrace();
+	    }
 	}
 	
 	@PostInit

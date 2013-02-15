@@ -20,7 +20,7 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import torresmon235.crystalgun.common.CrystalGunMain;
 import torresmon235.crystalgun.handlers.CrystalGunExtractorHandler;
 import torresmon235.crystalgun.handlers.CrystalGunParticleHandler;
-import torresmon235.crystalgun.handlers.CrystalGunRenderIDHandler;
+import torresmon235.crystalgun.library.RenderID;
 import torresmon235.crystalgun.tileentities.TileEntityCoreExtractor;
 
 import net.minecraft.block.Block;
@@ -43,15 +43,12 @@ import net.minecraft.world.World;
 
 public class BlockCoreExtractor extends BlockContainer
 {
-	private int count;
-
 	public BlockCoreExtractor(int i, int j, Class class1) 
 	{
 		super(i, j, Material.rock);
 		this.setLightValue(0.4F);
 		this.setBlockBounds(0F, 0F, 0F, 1F, 0.5F, 1F);
 		anEntityClass = class1;
-		count = 0;
 	}
     
     public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random)

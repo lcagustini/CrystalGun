@@ -18,6 +18,7 @@ import torresmon235.crystalgun.common.CrystalGunMain;
 import torresmon235.crystalgun.entities.ParticleAir;
 import torresmon235.crystalgun.entities.ParticleFire;
 import torresmon235.crystalgun.entities.ParticleGrass;
+import torresmon235.crystalgun.entities.ParticleHealing;
 import torresmon235.crystalgun.entities.ParticleIce;
 import torresmon235.crystalgun.entities.ParticleLife;
 import torresmon235.crystalgun.entities.ParticlePoison;
@@ -59,6 +60,10 @@ public class CrystalGunParticleHandler
 		if(string == "Water")
 		{
 			CrystalGunMain.mc.effectRenderer.addEffect(new ParticleWater(Minecraft.getMinecraft().theWorld, x, y, z, mx, my, mz, red, green, blue));
+		}
+		if(string == "Healing")
+		{
+			CrystalGunMain.mc.effectRenderer.addEffect(new ParticleHealing(Minecraft.getMinecraft().theWorld, x, y, z, mx, my, mz, red, green, blue));
 		}
 	}
 }

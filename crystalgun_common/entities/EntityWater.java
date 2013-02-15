@@ -396,8 +396,10 @@ public class EntityWater extends Entity implements IProjectile
     			}
     		}
     			
-    		par1MovingObjectPosition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), damage);
-    		
+    		if(damage > 0)
+    		{
+    			par1MovingObjectPosition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), damage);
+    		}    		
     	}
 		if (!this.worldObj.isRemote)
 		{
@@ -407,7 +409,7 @@ public class EntityWater extends Entity implements IProjectile
     	for(int k = 0; k < 5; k++)
     	{
     		this.worldObj.spawnParticle("smoke", this.posX, this.posY, this.posZ, 0, 0, 0);
-    		CrystalGunParticleHandler.spawnParticle("Water", this.posX, this.posY, this.posZ, 0, 0, 0, 0, 97, 194);
+    		CrystalGunParticleHandler.spawnParticle("Water", this.posX, this.posY, this.posZ, 0, 0, 0, red, green, blue);
     		this.worldObj.spawnParticle("smoke", this.posX, this.posY, this.posZ, 0, 0, 0);
     	}
     }

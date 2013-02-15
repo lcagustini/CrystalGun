@@ -36,7 +36,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-public class EntityAir extends Entity implements IProjectile
+public class EntityHealing extends Entity implements IProjectile
 {
 	public static int red;
 	public static int green;
@@ -62,7 +62,7 @@ public class EntityAir extends Entity implements IProjectile
     private int ticksInGround;
     private int ticksInAir = 0;
 
-    public EntityAir(World par1World)
+    public EntityHealing(World par1World)
     {
         super(par1World);
         this.setSize(0.25F, 0.25F);
@@ -88,7 +88,7 @@ public class EntityAir extends Entity implements IProjectile
     	return "/torresmon235/crystalgun/textures/items.png";
     }
 
-    public EntityAir(World par1World, EntityLiving par2EntityLiving, ArrayList effect, ArrayList effectextra, int redColor, int greenColor, int blueColor)
+    public EntityHealing(World par1World, EntityLiving par2EntityLiving, ArrayList effect, ArrayList effectextra, int redColor, int greenColor, int blueColor)
     {
         super(par1World);
         effects = effect;
@@ -111,7 +111,7 @@ public class EntityAir extends Entity implements IProjectile
         this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, this.func_70182_d(), 1.0F);
     }
 
-    public EntityAir(World par1World, double par2, double par4, double par6)
+    public EntityHealing(World par1World, double par2, double par4, double par6)
     {
         super(par1World);
         this.ticksInGround = 0;
@@ -229,7 +229,7 @@ public class EntityAir extends Entity implements IProjectile
         
         if(this.worldObj.isRemote)
         {
-        	CrystalGunParticleHandler.spawnParticle("Air", this.posX, this.posY, this.posZ, this.motionX - 0.4546F, this.motionY - 0.4546F, this.motionZ - 0.4546F, red, green, blue);
+        	CrystalGunParticleHandler.spawnParticle("Healing", this.posX, this.posY, this.posZ, this.motionX - 0.4546F, this.motionY - 0.4546F, this.motionZ - 0.4546F, red, green, blue);
         }
 
         if (!this.worldObj.isRemote)
@@ -395,11 +395,11 @@ public class EntityAir extends Entity implements IProjectile
     				}
     			}
     		}
-    			
+    		
     		if(damage > 0)
     		{
     			par1MovingObjectPosition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), damage);
-    		}    		
+    		}
     	}
 		if (!this.worldObj.isRemote)
 		{
@@ -409,7 +409,7 @@ public class EntityAir extends Entity implements IProjectile
     	for(int k = 0; k < 5; k++)
     	{
     		this.worldObj.spawnParticle("smoke", this.posX, this.posY, this.posZ, 0, 0, 0);
-    		CrystalGunParticleHandler.spawnParticle("Air", this.posX, this.posY, this.posZ, 0, 0, 0, red, green, blue);
+    		CrystalGunParticleHandler.spawnParticle("Healing", this.posX, this.posY, this.posZ, 0, 0, 0, red, green, blue);
     		this.worldObj.spawnParticle("smoke", this.posX, this.posY, this.posZ, 0, 0, 0);
     	}
     }

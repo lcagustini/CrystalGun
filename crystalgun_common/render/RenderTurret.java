@@ -13,34 +13,35 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package torresmon235.crystalgun.render;
 
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import torresmon235.crystalgun.models.ModelStoneTurret;
-import torresmon235.crystalgun.turrets.TurretStone;
+import torresmon235.crystalgun.turrets.TurretParent;
+import torresmon235.crystalgun.turrets.TurretWooden;
 
-public class RenderStoneTurret extends RenderLiving
+public class RenderTurret extends RenderLiving
 {
-	protected ModelStoneTurret model;
+	protected ModelBase model;
  
-	public RenderStoneTurret (ModelStoneTurret modelTutorial, float f)
+	public RenderTurret (ModelBase modelTutorial, float f)
 	{
 		super(modelTutorial, f);
-		model = ((ModelStoneTurret)mainModel);
+		model = ((ModelBase)mainModel);
 	}
  
-	public void renderStoneTurret(TurretStone entity, double par2, double par4, double par6, float par8, float par9)
+	public void renderTurret(TurretParent entity, double par2, double par4, double par6, float par8, float par9)
 	{
 		super.doRenderLiving(entity, par2, par4, par6, par8, par9);
 	}
  
 	public void doRenderLiving(EntityLiving par1EntityLiving, double par2, double par4, double par6, float par8, float par9)
     {
-        renderStoneTurret((TurretStone)par1EntityLiving, par2, par4, par6, par8, par9);
+        renderTurret((TurretParent)par1EntityLiving, par2, par4, par6, par8, par9);
     }
  
 	public void doRender(Entity par1Entity, double par2, double par4, double par6, float par8, float par9)
     {
-        renderStoneTurret((TurretStone)par1Entity, par2, par4, par6, par8, par9);
+        renderTurret((TurretParent)par1Entity, par2, par4, par6, par8, par9);
     }
 }

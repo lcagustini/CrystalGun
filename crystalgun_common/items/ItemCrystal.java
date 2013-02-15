@@ -54,6 +54,7 @@ public class ItemCrystal extends Item
 		case 5:return 5;
 		case 6:return 19;
 		case 7:return 22;
+		case 8:return 32;
 		}
 		return 0;
 	}
@@ -70,6 +71,7 @@ public class ItemCrystal extends Item
 		case 5:return "LifeCrystal";
 		case 6:return "GrassCrystal";
 		case 7:return "PoisonCrystal";
+		case 8:return "HealingCrystal";
 		}
 		return "Crystal";
 	}
@@ -77,7 +79,7 @@ public class ItemCrystal extends Item
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(int itemID, CreativeTabs tab, List itemList)
 	{
-		for(int i = 0; i <= 7; i++)
+		for(int i = 0; i <= 8; i++)
 		{
 			itemList.add(new ItemStack(itemID,1,i));
 		}
@@ -90,14 +92,18 @@ public class ItemCrystal extends Item
 			int meta = itemstack.getItemDamage();
 			int index = 448 - itemstack.stackSize * 7;
 			
-			if(meta == 0) return new ItemStack(CrystalGunMain.CrystalGunWater, 1, index);
-			if(meta == 1) return new ItemStack(CrystalGunMain.CrystalGunFire, 1, index);
-			if(meta == 2) return new ItemStack(CrystalGunMain.CrystalGunAir, 1, index);
-			if(meta == 3) return new ItemStack(CrystalGunMain.CrystalGunIce, 1, index);
-			if(meta == 4) return new ItemStack(CrystalGunMain.CrystalGunSand, 1, index);
-			if(meta == 5) return new ItemStack(CrystalGunMain.CrystalGunLife, 1, index);
-			if(meta == 6) return new ItemStack(CrystalGunMain.CrystalGunGrass, 1, index);
-			if(meta == 7) return new ItemStack(CrystalGunMain.CrystalGunPoison, 1, index);
+			switch(meta)
+			{
+			case 0:return new ItemStack(CrystalGunMain.CrystalGunWater, 1, index);
+			case 1:return new ItemStack(CrystalGunMain.CrystalGunFire, 1, index);
+			case 2:return new ItemStack(CrystalGunMain.CrystalGunAir, 1, index);
+			case 3:return new ItemStack(CrystalGunMain.CrystalGunIce, 1, index);
+			case 4:return new ItemStack(CrystalGunMain.CrystalGunSand, 1, index);
+			case 5:return new ItemStack(CrystalGunMain.CrystalGunLife, 1, index);
+			case 6:return new ItemStack(CrystalGunMain.CrystalGunGrass, 1, index);
+			case 7:return new ItemStack(CrystalGunMain.CrystalGunPoison, 1, index);
+			case 8:return new ItemStack(CrystalGunMain.CrystalGunHealing, 1, index);
+			}
 		}
         return itemstack;
     }

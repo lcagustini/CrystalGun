@@ -17,6 +17,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import torresmon235.crystalgun.entities.EntityAir;
 import torresmon235.crystalgun.entities.EntityFire;
 import torresmon235.crystalgun.entities.EntityGrass;
+import torresmon235.crystalgun.entities.EntityHealing;
 import torresmon235.crystalgun.entities.EntityIce;
 import torresmon235.crystalgun.entities.EntityLife;
 import torresmon235.crystalgun.entities.EntityPoison;
@@ -25,19 +26,21 @@ import torresmon235.crystalgun.entities.EntityWater;
 import torresmon235.crystalgun.entities.ParticleAir;
 import torresmon235.crystalgun.entities.ParticleFire;
 import torresmon235.crystalgun.entities.ParticleGrass;
+import torresmon235.crystalgun.entities.ParticleHealing;
 import torresmon235.crystalgun.entities.ParticleIce;
 import torresmon235.crystalgun.entities.ParticleLife;
 import torresmon235.crystalgun.entities.ParticlePoison;
 import torresmon235.crystalgun.entities.ParticleSand;
 import torresmon235.crystalgun.entities.ParticleWater;
 import torresmon235.crystalgun.handlers.CrystalGunClientTickHandler;
+import torresmon235.crystalgun.models.ModelIronTurret;
 import torresmon235.crystalgun.models.ModelStoneTurret;
 import torresmon235.crystalgun.models.ModelWoodenTurret;
 import torresmon235.crystalgun.render.RenderCoreExtractor;
 import torresmon235.crystalgun.render.RenderSprite;
-import torresmon235.crystalgun.render.RenderStoneTurret;
-import torresmon235.crystalgun.render.RenderWoodenTurret;
+import torresmon235.crystalgun.render.RenderTurret;
 import torresmon235.crystalgun.tileentities.TileEntityCoreExtractor;
+import torresmon235.crystalgun.turrets.TurretIron;
 import torresmon235.crystalgun.turrets.TurretStone;
 import torresmon235.crystalgun.turrets.TurretWooden;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -67,10 +70,13 @@ public class CrystalGunClientProxy extends CrystalGunCommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(ParticleSand.class, new RenderSprite(26));
 		RenderingRegistry.registerEntityRenderingHandler(EntityWater.class, new RenderSprite(6));
 		RenderingRegistry.registerEntityRenderingHandler(ParticleWater.class, new RenderSprite(26));
+		RenderingRegistry.registerEntityRenderingHandler(EntityHealing.class, new RenderSprite(34));
+		RenderingRegistry.registerEntityRenderingHandler(ParticleHealing.class, new RenderSprite(26));
 		
-		RenderingRegistry.registerEntityRenderingHandler(TurretWooden.class, new RenderWoodenTurret(new ModelWoodenTurret(), 0.3F));
-		RenderingRegistry.registerEntityRenderingHandler(TurretStone.class, new RenderStoneTurret(new ModelStoneTurret(), 0.3F));
-
+		RenderingRegistry.registerEntityRenderingHandler(TurretWooden.class, new RenderTurret(new ModelWoodenTurret(), 0.3F));
+		RenderingRegistry.registerEntityRenderingHandler(TurretStone.class, new RenderTurret(new ModelStoneTurret(), 0.3F));
+		RenderingRegistry.registerEntityRenderingHandler(TurretIron.class, new RenderTurret(new ModelIronTurret(), 0.3F));
+		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoreExtractor.class, new RenderCoreExtractor());
 		
 		TickRegistry.registerTickHandler(new CrystalGunClientTickHandler(), Side.CLIENT);
