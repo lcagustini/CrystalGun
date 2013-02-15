@@ -13,36 +13,39 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package torresmon235.crystalgun.tileentities;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 public class TileEntitySponge extends TileEntity
-{
-	public TileEntitySponge()
+{	
+	protected int range;
+	
+	public TileEntitySponge(int Range)
 	{
-		
+		this.range = Range;
 	}
 	
 	@Override
 	public void updateEntity()
 	{
-		if(!this.worldObj.isRemote)
+		removeWater(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+	}
+	
+	public void removeWater(World world, int x, int y, int z)
+	{
+		if(!world.isRemote)
     	{
-			World world = this.worldObj;
-			int x = this.xCoord;
-			int y = this.yCoord;
-			int z = this.zCoord;
-			
-			for(int j = -2; j <= 2; j++)
+			for(int j = -range; j <= range; j++)
 			{
-				for(int k = -2; k <= 2; k++)
+				for(int k = -range; k <= range; k++)
 				{
-					for(int i = -2; i <= 2; i++)
+					for(int i = -range; i <= range; i++)
 					{
 						if(this.worldObj.getBlockId(x + k, y + j, z + i) == 8 || this.worldObj.getBlockId(x + k, y + j, z + i) == 9) world.setBlock(x + k, y + j, z + i, 0);
 					}
 				}
 			}
     	}
-	}
+    }
 }

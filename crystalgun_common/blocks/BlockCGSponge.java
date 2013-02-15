@@ -16,6 +16,7 @@ package torresmon235.crystalgun.blocks;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import torresmon235.crystalgun.common.CrystalGunMain;
@@ -34,9 +35,27 @@ public class BlockCGSponge extends BlockContainer
 	{
 		return true;
 	}
-
+    
+    public void onNeighborBlockChange(World world, int x, int y, int z, int id)
+    {
+    	TileEntity TE = world.getBlockTileEntity(x, y, z);
+    	if(TE instanceof TileEntitySponge)
+    	{
+    		((TileEntitySponge)TE).removeWater(world, x, y, z);
+    	}
+    }
+    
+    public void onBlockAdded(World world, int x, int y, int z)
+    {
+    	TileEntity TE = world.getBlockTileEntity(x, y, z);
+    	if(TE instanceof TileEntitySponge)
+    	{
+    		((TileEntitySponge)TE).removeWater(world, x, y, z);
+    	}
+    }
+    
 	public TileEntity createNewTileEntity(World var1)
 	{
-		return new TileEntitySponge();
+		return new TileEntitySponge(3);
 	}
 }
