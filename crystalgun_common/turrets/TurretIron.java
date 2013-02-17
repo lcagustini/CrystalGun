@@ -34,13 +34,13 @@ import torresmon235.crystalgun.library.GuiID;
 
 public class TurretIron extends TurretParent implements IRangedAttackMob
 {	
-    private EntityAIArrowAttack field_85037_d = new EntityAIArrowAttack(this, 0F, 4, 10.0F);
+    private EntityAIArrowAttack field_85037_d = new EntityAIArrowAttack(this, 0F, 4, 32.0F);
     private EntityPlayer owner;
 	
 	public TurretIron(World world)
 	{
 		super(world);
-		this.texture = "/torresmon235/crystalgun/textures/iron.png";
+		this.texture = "/torresmon235/crystalgun/textures/turrets/iron.png";
         this.targetTasks.addTask(0, new EntityAIHurtByTarget(this, false));
 	}
 	
@@ -66,8 +66,8 @@ public class TurretIron extends TurretParent implements IRangedAttackMob
 	public void setTargetAndOwner(Class target, EntityPlayer entityplayer)
 	{
 		this.owner = entityplayer;
-        this.tasks.addTask(2, new EntityAIWatchClosest2(this, target, 64.0F, 0.02F));
-        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, target, 64.0F, 0, false));
+        this.tasks.addTask(2, new EntityAIWatchClosest2(this, target, 32.0F, 0.02F));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, target, 32.0F, 0, false));
         this.updateAITasks();
 	}
 	
@@ -98,7 +98,7 @@ public class TurretIron extends TurretParent implements IRangedAttackMob
     {
 		if(par1EntityLiving.canEntityBeSeen(this))
 		{
-			EntityArrow var2 = new EntityArrow(this.worldObj, this, par1EntityLiving, 2.89F, 9F);
+			EntityArrow var2 = new EntityArrow(this.worldObj, this, par1EntityLiving, 2.0075F, 9F);
 			this.playSound("random.bow", 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
 			this.worldObj.spawnEntityInWorld(var2);
 		}
@@ -132,6 +132,6 @@ public class TurretIron extends TurretParent implements IRangedAttackMob
 	
 	public String getTexture()
     {
-		return "/torresmon235/crystalgun/textures/iron.png";
+		return "/torresmon235/crystalgun/textures/turrets/iron.png";
     }
 }

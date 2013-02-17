@@ -11,13 +11,14 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package torresmon235.crystalgun.items;
+package torresmon235.crystalgun.items.crystalguns;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -102,6 +103,11 @@ public class ItemCrystalGunIce extends Item implements ICrystalGun
 			red = green = blue = 0;
 		}
     	return this;
+    }
+    
+    public EnumAction getItemUseAction(ItemStack par1ItemStack)
+    {
+        return EnumAction.bow;
     }
 	
 	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)

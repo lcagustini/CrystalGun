@@ -11,7 +11,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package torresmon235.crystalgun.entities;
+package torresmon235.crystalgun.entities.particles;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
@@ -25,7 +25,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ParticlePoison extends EntityFX
+public class ParticleWater extends EntityFX
 {
 	private Tessellator tessellator1 = Tessellator.instance;
 	
@@ -33,7 +33,7 @@ public class ParticlePoison extends EntityFX
 	public static int green;
 	public static int blue;
 	
-	public ParticlePoison(World par1World, double par2, double par4, double par6, double par8, double par10, double par12, int redColor, int greenColor, int blueColor)
+	public ParticleWater(World par1World, double par2, double par4, double par6, double par8, double par10, double par12, int redColor, int greenColor, int blueColor)
 	{
 		super(par1World, par2, par4, par6, par8, par10, par12);
 		red = redColor;

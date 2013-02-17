@@ -11,21 +11,22 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package torresmon235.crystalgun.items;
+package torresmon235.crystalgun.items.crystalguns;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import torresmon235.crystalgun.common.CrystalGunMain;
-import torresmon235.crystalgun.entities.EntityPoison;
+import torresmon235.crystalgun.entities.EntityAir;
 import torresmon235.crystalgun.interfaces.ICrystalGun;
 
-public class ItemCrystalGunPoison extends Item implements ICrystalGun
+public class ItemCrystalGunAir extends Item implements ICrystalGun
 {
 	public static ArrayList effects = new ArrayList();
 	public static ArrayList potion = new ArrayList();
@@ -37,8 +38,8 @@ public class ItemCrystalGunPoison extends Item implements ICrystalGun
 	public static int red;
 	public static int green;
 	public static int blue;
-
-	public ItemCrystalGunPoison(int par1)
+	
+	public ItemCrystalGunAir(int par1)
 	{
 		super(par1);
 		this.setCreativeTab(CrystalGunMain.crystalGunTab);
@@ -53,19 +54,19 @@ public class ItemCrystalGunPoison extends Item implements ICrystalGun
 		return "/torresmon235/crystalgun/textures/items.png";
 	}
 	
-	public ItemCrystalGunPoison setName(String string)
+	public ItemCrystalGunAir setName(String string)
 	{
 		name = string;
 		return this;
 	}
 	
-    public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
+    public void addInformation(ItemStack itemstack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
     {
     	if(name != null) par3List.add(name);
-    	par3List.add(448 - par1ItemStack.getItemDamage() + " Shots");
+    	par3List.add(448 - itemstack.getItemDamage() + " Shots");
     }
 
-    public ItemCrystalGunPoison setEffect(String effect, int damage, int k, int l, int j)
+    public ItemCrystalGunAir setEffect(String effect, int damage, int k, int l, int j)
     {
 		effects.add(effect);
 		if(effect == "Potion")
@@ -89,7 +90,7 @@ public class ItemCrystalGunPoison extends Item implements ICrystalGun
 		return this;
 	}
     
-    public ItemCrystalGunPoison setColor(int redColor, int greenColor, int blueColor)
+    public ItemCrystalGunAir setColor(int redColor, int greenColor, int blueColor)
     {
     	if(redColor != 0 || greenColor != 0 || blueColor != 0)
 		{
@@ -103,13 +104,13 @@ public class ItemCrystalGunPoison extends Item implements ICrystalGun
 		}
     	return this;
     }
-	
-	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
+    
+    public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
 	{
 		world.playSoundAtEntity(entityplayer, "crystalgun.shot", 0.7565F, 0.0F + itemRand.nextFloat() / 6);
     	if(!world.isRemote)
     	{
-    		EntityPoison entity = new EntityPoison(world, entityplayer, effects, effectsextra, red, green, blue);
+    		EntityAir entity = new EntityAir(world, entityplayer, effects, effectsextra, red, green, blue);
     		world.spawnEntityInWorld(entity);
     		if(itemstack.getItemDamage() < 447) itemstack.damageItem(1, entityplayer);
     		else

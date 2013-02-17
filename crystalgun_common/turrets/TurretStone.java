@@ -31,15 +31,15 @@ import net.minecraft.world.World;
 
 public class TurretStone extends TurretParent implements IRangedAttackMob
 {
-    private EntityAIArrowAttack field_85037_d = new EntityAIArrowAttack(this, 0F, 6, 10.0F);
+    private EntityAIArrowAttack field_85037_d = new EntityAIArrowAttack(this, 0F, 6, 24.0F);
 	
 	public TurretStone(World world)
 	{
 		super(world);
-		this.texture = "/torresmon235/crystalgun/textures/stone.png";
-        this.tasks.addTask(2, new EntityAIWatchClosest2(this, EntityMob.class, 48.0F, 0.02F));
+		this.texture = "/torresmon235/crystalgun/textures/turrets/stone.png";
+        this.tasks.addTask(2, new EntityAIWatchClosest2(this, EntityMob.class, 24.0F, 0.02F));
         this.targetTasks.addTask(0, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityMob.class, 48.0F, 0, false));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityMob.class, 24.0F, 0, false));
 	}
 	
 	protected void entityInit()
@@ -107,6 +107,6 @@ public class TurretStone extends TurretParent implements IRangedAttackMob
 	
 	public String getTexture()
     {
-		return "/torresmon235/crystalgun/textures/stone.png";
+		return "/torresmon235/crystalgun/textures/turrets/stone.png";
     }
 }

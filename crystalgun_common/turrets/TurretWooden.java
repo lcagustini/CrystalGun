@@ -33,15 +33,15 @@ import net.minecraft.world.World;
 
 public class TurretWooden extends TurretParent implements IRangedAttackMob
 {
-    private EntityAIArrowAttack field_85037_d = new EntityAIArrowAttack(this, 0F, 10, 10.0F);
+    private EntityAIArrowAttack field_85037_d = new EntityAIArrowAttack(this, 0F, 10, 16.0F);
 	
 	public TurretWooden(World world)
 	{
 		super(world);
-		this.texture = "/torresmon235/crystalgun/textures/wooden.png";
-        this.tasks.addTask(2, new EntityAIWatchClosest2(this, EntityLiving.class, 32.0F, 0.02F));
+		this.texture = "/torresmon235/crystalgun/textures/turrets/wooden.png";
+        this.tasks.addTask(2, new EntityAIWatchClosest2(this, EntityLiving.class, 16.0F, 0.02F));
         this.targetTasks.addTask(0, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityLiving.class, 32.0F, 0, false));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityLiving.class, 16.0F, 0, false));
 	}
 	
 	protected void entityInit()
@@ -109,6 +109,6 @@ public class TurretWooden extends TurretParent implements IRangedAttackMob
 	
 	public String getTexture()
     {
-		return "/torresmon235/crystalgun/textures/wooden.png";
+		return "/torresmon235/crystalgun/textures/turrets/wooden.png";
     }
 }

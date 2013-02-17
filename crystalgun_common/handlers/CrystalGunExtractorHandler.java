@@ -30,25 +30,33 @@ public class CrystalGunExtractorHandler
 	public static ArrayList ingredient = new ArrayList();
 	public static ArrayList result = new ArrayList();
 	
-	public static void addRecipe(Item input, ItemStack output)
+	public static void addRecipe(ItemStack input, ItemStack output)
 	{
 		ingredient.add(input);
 		result.add(output);
 	}
 	
-	public static Entity getResult(World world, ItemStack itemstack, double x, double y, double z)
+	public static void addRecipe(Item input, ItemStack output)
+	{
+		ingredient.add(new ItemStack(input, 1));
+		result.add(output);
+	}
+	
+	public static boolean spawnResult(World world, ItemStack itemstack, double x, double y, double z)
 	{
 		EntityItem entity1 = null;
+		boolean spawned = false;
 		
 		for(int i = 0; i < result.size(); i++)
 		{
-			if(itemstack.getItem() == ingredient.get(i))
+			if(itemstack.getItem() == ((ItemStack)ingredient.get(i)).getItem() && itemstack.getItemDamage() == ((ItemStack)ingredient.get(i)).getItemDamage())
 			{
 				ItemStack item1 = new ItemStack(((ItemStack) result.get(i)).getItem(), ((ItemStack) result.get(i)).stackSize, ((ItemStack) result.get(i)).getItemDamage());
 				itemstack.stackSize--;
 				entity1 = new EntityItem(world, x, y, z, item1);
+				if(world.spawnEntityInWorld(entity1)) spawned = true;
 			}
 		}
-		return entity1;
+		return spawned;
 	}
 }

@@ -11,11 +11,28 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package torresmon235.crystalgun.library;
+package torresmon235.crystalgun.items.crystalguns;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
+import torresmon235.crystalgun.common.CrystalGunMain;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
-public class RenderID 
+public class ItemCrystalGun extends Item
 {
-	public static int CoreExtractor = RenderingRegistry.getNextAvailableRenderId();
+	public ItemCrystalGun(int par1)
+	{
+		super(par1);
+		this.setMaxStackSize(1);
+		this.bFull3D = true;
+		this.setCreativeTab(CrystalGunMain.crystalGunTab);
+	}
+	
+	@Override
+	public String getTextureFile()
+	{
+		return "/torresmon235/crystalgun/textures/items.png";
+	}
 }

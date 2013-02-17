@@ -11,21 +11,22 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package torresmon235.crystalgun.items;
+package torresmon235.crystalgun.items.crystalguns;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import torresmon235.crystalgun.common.CrystalGunMain;
-import torresmon235.crystalgun.entities.EntityAir;
+import torresmon235.crystalgun.entities.EntityWater;
 import torresmon235.crystalgun.interfaces.ICrystalGun;
 
-public class ItemCrystalGunAir extends Item implements ICrystalGun
+public class ItemCrystalGunWater extends Item implements ICrystalGun
 {
 	public static ArrayList effects = new ArrayList();
 	public static ArrayList potion = new ArrayList();
@@ -38,7 +39,7 @@ public class ItemCrystalGunAir extends Item implements ICrystalGun
 	public static int green;
 	public static int blue;
 
-	public ItemCrystalGunAir(int par1)
+	public ItemCrystalGunWater(int par1)
 	{
 		super(par1);
 		this.setCreativeTab(CrystalGunMain.crystalGunTab);
@@ -53,7 +54,7 @@ public class ItemCrystalGunAir extends Item implements ICrystalGun
 		return "/torresmon235/crystalgun/textures/items.png";
 	}
 	
-	public ItemCrystalGunAir setName(String string)
+	public ItemCrystalGunWater setName(String string)
 	{
 		name = string;
 		return this;
@@ -65,7 +66,7 @@ public class ItemCrystalGunAir extends Item implements ICrystalGun
     	par3List.add(448 - par1ItemStack.getItemDamage() + " Shots");
     }
 
-    public ItemCrystalGunAir setEffect(String effect, int damage, int k, int l, int j)
+    public ItemCrystalGunWater setEffect(String effect, int damage, int k, int l, int j)
     {
 		effects.add(effect);
 		if(effect == "Potion")
@@ -89,7 +90,7 @@ public class ItemCrystalGunAir extends Item implements ICrystalGun
 		return this;
 	}
     
-    public ItemCrystalGunAir setColor(int redColor, int greenColor, int blueColor)
+    public ItemCrystalGunWater setColor(int redColor, int greenColor, int blueColor)
     {
     	if(redColor != 0 || greenColor != 0 || blueColor != 0)
 		{
@@ -103,13 +104,18 @@ public class ItemCrystalGunAir extends Item implements ICrystalGun
 		}
     	return this;
     }
+    
+    public EnumAction getItemUseAction(ItemStack par1ItemStack)
+    {
+        return EnumAction.bow;
+    }
 	
 	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
 	{
 		world.playSoundAtEntity(entityplayer, "crystalgun.shot", 0.7565F, 0.0F + itemRand.nextFloat() / 6);
     	if(!world.isRemote)
     	{
-    		EntityAir entity = new EntityAir(world, entityplayer, effects, effectsextra, red, green, blue);
+    		EntityWater entity = new EntityWater(world, entityplayer, effects, effectsextra, red, green, blue);
     		world.spawnEntityInWorld(entity);
     		if(itemstack.getItemDamage() < 447) itemstack.damageItem(1, entityplayer);
     		else

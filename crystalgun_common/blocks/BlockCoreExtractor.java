@@ -70,15 +70,13 @@ public class BlockCoreExtractor extends BlockContainer
     	{
     		if(stack != null)
     		{
-    			EntityItem item = (EntityItem) CrystalGunExtractorHandler.getResult(world, stack, x + 0.5, y + 1, z + 0.5);
-    			if(item != null)
+    			if(CrystalGunExtractorHandler.spawnResult(world, stack, x + 0.5, y + 1, z + 0.5))
     			{
     				for(int i = 0; i < 4; i++)
     				{
     					CrystalGunParticleHandler.spawnParticle("Grass", x + 0.5, y + 0.5, z + 0.5, 0, 0, 0, 6, 255, 0);
     				}
     				world.playSoundEffect(x, y, z, "crystalgun.craft", 0.7565F, 1.0F + (float)Math.random() / 2);
-    				world.spawnEntityInWorld(item);
     				return true;
     			}
     		}
@@ -101,9 +99,10 @@ public class BlockCoreExtractor extends BlockContainer
 		return false;
 	}
 
+	@Override
 	public int getRenderType() 
 	{
-		return RenderingRegistry.getNextAvailableRenderId();
+		return RenderID.CoreExtractor;
 	}
 	
 	public boolean hasTileEntity()
@@ -114,36 +113,6 @@ public class BlockCoreExtractor extends BlockContainer
 	public TileEntity createNewTileEntity(World var1)
 	{
 		return new TileEntityCoreExtractor();
-	}
-
-	public boolean blockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
-	{
-
-	int p = MathHelper.floor_double((double)((par5EntityPlayer.rotationYaw * 4F) / 360F) + 0.5D) & 3; //this is a smart equation
-
-	byte byte0 = 3;
-          
-          
-                if (p == 0)
-                {
-                        byte0 = 4;
-                }
-                if (p == 1)
-                {
-                        byte0 = 3;
-                }
-                if (p == 2)
-                {
-                        byte0 = 2;
-                }
-                if (p == 3)
-                {
-                        byte0 = 1;
-                }
-
-                par1World.setBlockMetadataWithNotify(par2, par3, par4, byte0);
-          
-                return true;
 	}
 	
 	private Class anEntityClass;

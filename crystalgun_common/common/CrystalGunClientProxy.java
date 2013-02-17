@@ -23,20 +23,21 @@ import torresmon235.crystalgun.entities.EntityLife;
 import torresmon235.crystalgun.entities.EntityPoison;
 import torresmon235.crystalgun.entities.EntitySand;
 import torresmon235.crystalgun.entities.EntityWater;
-import torresmon235.crystalgun.entities.ParticleAir;
-import torresmon235.crystalgun.entities.ParticleFire;
-import torresmon235.crystalgun.entities.ParticleGrass;
-import torresmon235.crystalgun.entities.ParticleHealing;
-import torresmon235.crystalgun.entities.ParticleIce;
-import torresmon235.crystalgun.entities.ParticleLife;
-import torresmon235.crystalgun.entities.ParticlePoison;
-import torresmon235.crystalgun.entities.ParticleSand;
-import torresmon235.crystalgun.entities.ParticleWater;
+import torresmon235.crystalgun.entities.particles.ParticleAir;
+import torresmon235.crystalgun.entities.particles.ParticleFire;
+import torresmon235.crystalgun.entities.particles.ParticleGrass;
+import torresmon235.crystalgun.entities.particles.ParticleHealing;
+import torresmon235.crystalgun.entities.particles.ParticleIce;
+import torresmon235.crystalgun.entities.particles.ParticleLife;
+import torresmon235.crystalgun.entities.particles.ParticlePoison;
+import torresmon235.crystalgun.entities.particles.ParticleSand;
+import torresmon235.crystalgun.entities.particles.ParticleWater;
 import torresmon235.crystalgun.handlers.CrystalGunClientTickHandler;
 import torresmon235.crystalgun.models.ModelIronTurret;
 import torresmon235.crystalgun.models.ModelStoneTurret;
 import torresmon235.crystalgun.models.ModelWoodenTurret;
 import torresmon235.crystalgun.render.RenderCoreExtractor;
+import torresmon235.crystalgun.render.RenderCrystalGun;
 import torresmon235.crystalgun.render.RenderSprite;
 import torresmon235.crystalgun.render.RenderTurret;
 import torresmon235.crystalgun.tileentities.TileEntityCoreExtractor;
@@ -79,6 +80,17 @@ public class CrystalGunClientProxy extends CrystalGunCommonProxy
 		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoreExtractor.class, new RenderCoreExtractor());
 		
+		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGun.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/crystalgun.png"));
+		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGunAir.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/airgun.png"));
+		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGunFire.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/firegun.png"));
+		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGunGrass.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/grassgun.png"));
+		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGunHealing.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/healinggun.png"));
+		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGunIce.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/icegun.png"));
+		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGunLife.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/lifegun.png"));
+		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGunPoison.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/poisongun.png"));
+		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGunSand.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/sandgun.png"));
+		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGunWater.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/watergun.png"));
+
 		TickRegistry.registerTickHandler(new CrystalGunClientTickHandler(), Side.CLIENT);
 	}
 }

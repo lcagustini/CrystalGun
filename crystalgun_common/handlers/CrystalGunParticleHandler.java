@@ -15,15 +15,15 @@ package torresmon235.crystalgun.handlers;
 
 import net.minecraft.client.Minecraft;
 import torresmon235.crystalgun.common.CrystalGunMain;
-import torresmon235.crystalgun.entities.ParticleAir;
-import torresmon235.crystalgun.entities.ParticleFire;
-import torresmon235.crystalgun.entities.ParticleGrass;
-import torresmon235.crystalgun.entities.ParticleHealing;
-import torresmon235.crystalgun.entities.ParticleIce;
-import torresmon235.crystalgun.entities.ParticleLife;
-import torresmon235.crystalgun.entities.ParticlePoison;
-import torresmon235.crystalgun.entities.ParticleSand;
-import torresmon235.crystalgun.entities.ParticleWater;
+import torresmon235.crystalgun.entities.particles.ParticleAir;
+import torresmon235.crystalgun.entities.particles.ParticleFire;
+import torresmon235.crystalgun.entities.particles.ParticleGrass;
+import torresmon235.crystalgun.entities.particles.ParticleHealing;
+import torresmon235.crystalgun.entities.particles.ParticleIce;
+import torresmon235.crystalgun.entities.particles.ParticleLife;
+import torresmon235.crystalgun.entities.particles.ParticlePoison;
+import torresmon235.crystalgun.entities.particles.ParticleSand;
+import torresmon235.crystalgun.entities.particles.ParticleWater;
 
 public class CrystalGunParticleHandler 
 {
