@@ -16,6 +16,8 @@ package torresmon235.crystalgun.blocks;
 import java.util.Random;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 import torresmon235.crystalgun.common.CrystalGunMain;
 import torresmon235.crystalgun.handlers.CrystalGunExtractorHandler;
@@ -115,5 +117,17 @@ public class BlockCoreExtractor extends BlockContainer
 		return new TileEntityCoreExtractor();
 	}
 	
+	@SideOnly(Side.CLIENT)
+	public int idPicked(World par1World, int par2, int par3, int par4)
+    {
+        return CrystalGunMain.CoreExtractorItem.itemID;
+    }
+	
 	private Class anEntityClass;
+	
+	@Override
+	public String getTextureFile()
+	{
+		return "/torresmon235/crystalgun/textures/coreextractor.png";
+	}
 }

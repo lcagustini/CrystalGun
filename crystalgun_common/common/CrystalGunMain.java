@@ -13,11 +13,13 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package torresmon235.crystalgun.common;
 
+import java.awt.List;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -34,6 +36,7 @@ import net.minecraftforge.common.EnumHelper;
 import torresmon235.crystalgun.blocks.BlockCGSponge;
 import torresmon235.crystalgun.blocks.BlockCoreExtractor;
 import torresmon235.crystalgun.blocks.BlockCrystalBlock;
+import torresmon235.crystalgun.blocks.BlockCGCauldron;
 import torresmon235.crystalgun.entities.EntityAir;
 import torresmon235.crystalgun.entities.EntityFire;
 import torresmon235.crystalgun.entities.EntityGrass;
@@ -52,6 +55,7 @@ import torresmon235.crystalgun.entities.particles.ParticleLife;
 import torresmon235.crystalgun.entities.particles.ParticlePoison;
 import torresmon235.crystalgun.entities.particles.ParticleSand;
 import torresmon235.crystalgun.entities.particles.ParticleWater;
+import torresmon235.crystalgun.handlers.CrystalGunCauldronHandler;
 import torresmon235.crystalgun.handlers.CrystalGunClientPacketHandler;
 import torresmon235.crystalgun.handlers.CrystalGunExtractorHandler;
 import torresmon235.crystalgun.handlers.CrystalGunGuiHandler;
@@ -75,7 +79,9 @@ import torresmon235.crystalgun.items.crystalguns.ItemCrystalGunPoison;
 import torresmon235.crystalgun.items.crystalguns.ItemCrystalGunSand;
 import torresmon235.crystalgun.items.crystalguns.ItemCrystalGunWater;
 import torresmon235.crystalgun.render.RenderCoreExtractor;
+import torresmon235.crystalgun.tileentities.TileEntityCGCauldron;
 import torresmon235.crystalgun.tileentities.TileEntityCoreExtractor;
+import torresmon235.crystalgun.tileentities.TileEntitySponge;
 import torresmon235.crystalgun.turrets.TurretIron;
 import torresmon235.crystalgun.turrets.TurretStone;
 import torresmon235.crystalgun.turrets.TurretWooden;
@@ -95,7 +101,7 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod(modid = "crystalgun", name = "Crystal Gun", version = "0.5beta")
+@Mod(modid = "crystalgun", name = "Crystal Gun", version = "0.6beta")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec =
 @SidedPacketHandler(channels = {"CrystalGunMain"}, packetHandler = CrystalGunClientPacketHandler.class),
@@ -140,8 +146,10 @@ public class CrystalGunMain
 	public int RubyChestplateID;
 	public int OpalLeggingsID;
 	public int AquamarineBootsID;
+	public int CauldronItemID;
 	public int CrystalBlockID;
 	public int CGSpongeID;
+	public int CGCauldronID;
 	public static boolean EggDrop;
 	
 	//CrystalGuns
@@ -160,6 +168,7 @@ public class CrystalGunMain
 	public static Block CoreExtractor;
 	public static Block CrystalBlock;
 	public static Block CGSponge;
+	public static Block CGCauldron;
 	
 	//Items
 	public static Item ConductiveIron;
@@ -169,6 +178,7 @@ public class CrystalGunMain
 	public static Item ShinyCrystal;
 	public static Item Crystal;
 	public static Item CoreExtractorItem;
+	public static Item CauldronItem;
 	public static Item IronBrain;
 	public static Item GoldenBrain;
 	public static Item DiamondBrain;
@@ -223,9 +233,11 @@ public class CrystalGunMain
         RubyChestplateID = config.getItem("Ruby Chestplate ID", 13361).getInt();
         OpalLeggingsID = config.getItem("Opal Leggings ID", 13362).getInt();
         AquamarineBootsID = config.getItem("Aquarine Boots ID", 13363).getInt();
+        CauldronItemID = config.getItem("Metal Pot ID (Item)", 13364).getInt();
         CoreExtractorID = config.getBlock("Core Extractor ID", 600).getInt();
         CrystalBlockID = config.getBlock("Crystal Block ID", 601).getInt();
         CGSpongeID = config.getBlock("Sponge ID", 602).getInt();
+        CGCauldronID = config.getBlock("Metal Pot ID", 603).getInt();
         EggDrop = config.get(Configuration.CATEGORY_GENERAL, "Turrets should drop eggs", true).getBoolean(false);
 
         config.save();
@@ -243,7 +255,9 @@ public class CrystalGunMain
 		
 		//TileEntities
 		GameRegistry.registerTileEntity(TileEntityCoreExtractor.class, "CoreExtractor");
-		
+		GameRegistry.registerTileEntity(TileEntityCGCauldron.class, "CGCauldron");
+		GameRegistry.registerTileEntity(TileEntitySponge.class, "CGSponge");
+
 		//Entities
 		EntityRegistry.registerModEntity(EntityFire.class, "Fire", 1, this, 100, 1, true);
 		EntityRegistry.registerModEntity(ParticleFire.class, "ParticleFire", 2, this, 100, 1, true);
@@ -297,7 +311,11 @@ public class CrystalGunMain
 		CGSponge = new BlockCGSponge(CGSpongeID).setHardness(0.6F).setStepSound(Block.soundGrassFootstep).setBlockName("CGSponge");
 		LanguageRegistry.addName(CGSponge, "Sponge");
 		GameRegistry.registerBlock(CGSponge, "Sponge");
-
+		
+		CGCauldron = new BlockCGCauldron(CGCauldronID).setHardness(2.0F).setBlockName("CGCauldron").setRequiresSelfNotify();
+		LanguageRegistry.addName(CGCauldron, "Metal Pot");
+		GameRegistry.registerBlock(CGCauldron, "Metal Pot");
+		
 		//Items
 		CrystalGun = new ItemCrystalGun(CrystalGunID).setItemName("CrystalGun").setIconIndex(12);
 		LanguageRegistry.addName(CrystalGun, "Crystal Gun");
@@ -411,6 +429,10 @@ public class CrystalGunMain
 		AquamarineBoots = new ItemAquamarineBoots(AquamarineBootsID, GemsMaterial, 0, 3).setIconIndex(48).setItemName("AquamarineBoots").setCreativeTab(CrystalGunMain.crystalGunTab);
 		LanguageRegistry.addName(AquamarineBoots, "Aquamarine Boots");
 		
+		CauldronItem = new ItemReed(CauldronItemID, CGCauldron).setIconIndex(52).setItemName("CauldronItem")
+				.setCreativeTab(CrystalGunMain.crystalGunTab).setTextureFile("/torresmon235/crystalgun/textures/items.png");
+		LanguageRegistry.addName(CauldronItem, "Metal Pot");
+		
 		//Recipes
 		GameRegistry.addShapelessRecipe(new ItemStack(ConductiveIron, 1), new Object[] {Item.ingotIron, Item.redstone});
 		GameRegistry.addShapelessRecipe(new ItemStack(ConductiveGold, 1), new Object[] {Item.ingotGold, Item.redstone});
@@ -421,10 +443,11 @@ public class CrystalGunMain
 		GameRegistry.addRecipe(new ItemStack(Item.monsterPlacer, 1, 301), new Object[] {"WBW", " W ", "WWW", 'W', Block.wood, 'B', IronBrain});
 		GameRegistry.addRecipe(new ItemStack(Item.monsterPlacer, 1, 302), new Object[] {"SBS", " S ", "QQQ", 'S', Block.stone, 'B', GoldenBrain, 'Q', Block.stoneBrick});
 		GameRegistry.addRecipe(new ItemStack(Item.monsterPlacer, 1, 303), new Object[] {"IBI", " S ", "QIQ", 'S', Item.stick, 'B', DiamondBrain, 'I', Item.ingotIron, 'Q', Block.blockSteel});
-		GameRegistry.addRecipe(new ItemStack(SaphireHelmet, 1), new Object[] {"GAG", "G G", 'G', new ItemStack(Gem, 1, 0), 'A', Item.helmetDiamond});
-		GameRegistry.addRecipe(new ItemStack(RubyChestplate, 1), new Object[] {"GAG", "G G", 'G', new ItemStack(Gem, 1, 1), 'A', Item.plateDiamond});
-		GameRegistry.addRecipe(new ItemStack(OpalLeggings, 1), new Object[] {"GAG", "G G", 'G', new ItemStack(Gem, 1, 2), 'A', Item.legsDiamond});
-		GameRegistry.addRecipe(new ItemStack(AquamarineBoots, 1), new Object[] {"GAG", "G G", 'G', new ItemStack(Gem, 1, 3), 'A', Item.bootsDiamond});
+		GameRegistry.addRecipe(new ItemStack(SaphireHelmet, 1), new Object[] {"GGG", "GAG", "GGG", 'G', new ItemStack(Gem, 1, 0), 'A', Item.helmetDiamond});
+		GameRegistry.addRecipe(new ItemStack(RubyChestplate, 1), new Object[] {"GGG", "GAG", "GGG", 'G', new ItemStack(Gem, 1, 1), 'A', Item.plateDiamond});
+		GameRegistry.addRecipe(new ItemStack(OpalLeggings, 1), new Object[] {"GGG", "GAG", "GGG", 'G', new ItemStack(Gem, 1, 2), 'A', Item.legsDiamond});
+		GameRegistry.addRecipe(new ItemStack(AquamarineBoots, 1), new Object[] {"GGG", "GAG", "GGG", 'G', new ItemStack(Gem, 1, 3), 'A', Item.bootsDiamond});
+		GameRegistry.addRecipe(new ItemStack(CauldronItem, 1), new Object[] {"I I", "GOG", "III", 'G', new ItemStack(Gem, 1, 4), 'I', Item.ingotIron, 'O', Block.obsidian});
 		for(int i = 0; i <= 8; i++)
 		{
 			GameRegistry.addRecipe(new ItemStack(CrystalBlock, 1, i), new Object[] {"CC", "CC", 'C', new ItemStack(Crystal, 1, i)});
@@ -439,7 +462,8 @@ public class CrystalGunMain
 		CrystalGunExtractorHandler.addRecipe(Item.blazePowder, new ItemStack(Crystal, 1, 1));
 		CrystalGunExtractorHandler.addRecipe(Item.rottenFlesh, new ItemStack(Crystal, 1, 7));
 		CrystalGunExtractorHandler.addRecipe(Item.spiderEye, new ItemStack(Crystal, 1, 7));
-		CrystalGunExtractorHandler.addRecipe(Item.fishRaw, new ItemStack(Crystal, 1, 0));
+		CrystalGunExtractorHandler.addRecipe(Item.bucketWater, new ItemStack(Crystal, 1, 0));
+		CrystalGunExtractorHandler.addRecipe(Item.bucketWater, new ItemStack(Item.bucketEmpty, 1));
 		CrystalGunExtractorHandler.addRecipe(Item.feather, new ItemStack(Crystal, 1, 2));
 		CrystalGunExtractorHandler.addRecipe(new ItemStack(Block.blockSnow).getItem() , new ItemStack(Crystal, 1, 3));
 		CrystalGunExtractorHandler.addRecipe(new ItemStack(Block.ice).getItem(), new ItemStack(Crystal, 1, 3));
@@ -463,6 +487,26 @@ public class CrystalGunMain
 			CrystalGunExtractorHandler.addRecipe(new ItemStack(ShinyCrystal, 1, i), new ItemStack(Gem, 1, i));
 		}
 		
+		CrystalGunCauldronHandler.addRecipe(Item.sugar, 1, 1, 3600);
+		CrystalGunCauldronHandler.addRecipe(Item.goldNugget, 2, 1, 3600);
+		CrystalGunCauldronHandler.addRecipe(Item.carrot, 3, 1, 3600);
+		CrystalGunCauldronHandler.addRecipe(Item.wheat, 4, 1, 3600);
+		CrystalGunCauldronHandler.addRecipe(Item.blazePowder, 5, 1, 3600);
+		CrystalGunCauldronHandler.addRecipe(Item.speckledMelon, 6, 1, 1);
+		CrystalGunCauldronHandler.addRecipe(Item.fermentedSpiderEye, 7, 1, 1);
+		CrystalGunCauldronHandler.addRecipe(Item.stick, 8, 1, 1000);
+		CrystalGunCauldronHandler.addRecipe(Item.rottenFlesh, 9, 1, 900);
+		CrystalGunCauldronHandler.addRecipe(Item.ghastTear, 10, 1, 900);
+		CrystalGunCauldronHandler.addRecipe(Item.appleGold, 11, 1, 900);
+		CrystalGunCauldronHandler.addRecipe(Item.magmaCream, 12, 1, 3600);
+		CrystalGunCauldronHandler.addRecipe(Item.fishRaw, 13, 1, 3600);
+		CrystalGunCauldronHandler.addRecipe(new ItemStack(Block.glass, 1), 14, 1, 3600);
+		CrystalGunCauldronHandler.addRecipe(new ItemStack(Block.sand, 1), 15, 1, 3600);
+		CrystalGunCauldronHandler.addRecipe(Item.goldenCarrot, 16, 1, 3600);
+		CrystalGunCauldronHandler.addRecipe(Item.gunpowder, 18, 1, 3600);
+		CrystalGunCauldronHandler.addRecipe(Item.spiderEye, 19, 1, 900);
+		CrystalGunCauldronHandler.addRecipe(Item.redstone, 0, 0, 800);
+
 		//Render
 		proxy.registerRenderThings();
 	}
@@ -517,5 +561,6 @@ public class CrystalGunMain
 	public static void postInit(FMLPostInitializationEvent event) 
 	{
 		System.out.println(CrystalGunExtractorHandler.result.size() + " Extractor Recipes Loaded");
+		System.out.println(CrystalGunCauldronHandler.Ingredient.size() + " Cauldron Recipes Loaded");
 	}
 }

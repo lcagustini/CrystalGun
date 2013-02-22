@@ -19,7 +19,9 @@ import torresmon235.crystalgun.models.ModelCoreExtractor;
 
 import net.minecraft.block.BlockSponge;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.RenderEngine;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 

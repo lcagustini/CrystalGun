@@ -18,4 +18,5 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 public class RenderID 
 {
 	public static int CoreExtractor = RenderingRegistry.getNextAvailableRenderId();
+	public static int Cauldron = RenderingRegistry.getNextAvailableRenderId();
 }

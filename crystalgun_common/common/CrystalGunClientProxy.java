@@ -36,6 +36,7 @@ import torresmon235.crystalgun.handlers.CrystalGunClientTickHandler;
 import torresmon235.crystalgun.models.ModelIronTurret;
 import torresmon235.crystalgun.models.ModelStoneTurret;
 import torresmon235.crystalgun.models.ModelWoodenTurret;
+import torresmon235.crystalgun.render.RenderCauldron;
 import torresmon235.crystalgun.render.RenderCoreExtractor;
 import torresmon235.crystalgun.render.RenderCrystalGun;
 import torresmon235.crystalgun.render.RenderSprite;
@@ -55,6 +56,8 @@ public class CrystalGunClientProxy extends CrystalGunCommonProxy
 	public void registerRenderThings()
 	{
 		MinecraftForgeClient.preloadTexture("/torresmon235/crystalgun/textures/blocks.png");
+		MinecraftForgeClient.preloadTexture("/torresmon235/crystalgun/textures/coreextractor.png");
+
 		RenderingRegistry.registerEntityRenderingHandler(EntityFire.class, new RenderSprite(7));
 		RenderingRegistry.registerEntityRenderingHandler(ParticleFire.class, new RenderSprite(26));
 		RenderingRegistry.registerEntityRenderingHandler(EntityAir.class, new RenderSprite(8));
@@ -79,6 +82,7 @@ public class CrystalGunClientProxy extends CrystalGunCommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(TurretIron.class, new RenderTurret(new ModelIronTurret(), 0.3F));
 		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoreExtractor.class, new RenderCoreExtractor());
+		RenderingRegistry.registerBlockHandler(new RenderCauldron());
 		
 		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGun.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/crystalgun.png"));
 		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGunAir.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/airgun.png"));
