@@ -11,21 +11,18 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package torresmon235.crystalgun.common;
+package torresmon235.crystalgun.guis;
 
-import torresmon235.crystalgun.registration.RegistryItems;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 
-public class CrystalGunCreativeTab extends CreativeTabs
+public class ContainerMagicalSorter extends Container
 {
-	public CrystalGunCreativeTab(String label) 
-	{
-	    super(label);
-	}
+
 	@Override
-	public ItemStack getIconItemStack() 
+	public boolean canInteractWith(EntityPlayer var1) 
 	{
-	    return new ItemStack(RegistryItems.CrystalGun);
+		return true;
 	}
+
 }

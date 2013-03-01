@@ -13,6 +13,9 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package torresmon235.crystalgun.common;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import net.minecraftforge.client.MinecraftForgeClient;
 import torresmon235.crystalgun.entities.EntityAir;
 import torresmon235.crystalgun.entities.EntityFire;
@@ -33,25 +36,42 @@ import torresmon235.crystalgun.entities.particles.ParticlePoison;
 import torresmon235.crystalgun.entities.particles.ParticleSand;
 import torresmon235.crystalgun.entities.particles.ParticleWater;
 import torresmon235.crystalgun.handlers.CrystalGunClientTickHandler;
+import torresmon235.crystalgun.items.crystalguns.ItemCrystalGunFire;
 import torresmon235.crystalgun.models.ModelIronTurret;
 import torresmon235.crystalgun.models.ModelStoneTurret;
 import torresmon235.crystalgun.models.ModelWoodenTurret;
+import torresmon235.crystalgun.registration.RegistryItems;
 import torresmon235.crystalgun.render.RenderCauldron;
 import torresmon235.crystalgun.render.RenderCoreExtractor;
 import torresmon235.crystalgun.render.RenderCrystalGun;
 import torresmon235.crystalgun.render.RenderSprite;
 import torresmon235.crystalgun.render.RenderTurret;
+import torresmon235.crystalgun.tileentities.TileEntityCGCauldron;
 import torresmon235.crystalgun.tileentities.TileEntityCoreExtractor;
+import torresmon235.crystalgun.tileentities.TileEntityMagicalFilter;
+import torresmon235.crystalgun.tileentities.TileEntityMagicalSorter;
+import torresmon235.crystalgun.tileentities.TileEntitySponge;
 import torresmon235.crystalgun.turrets.TurretIron;
 import torresmon235.crystalgun.turrets.TurretStone;
 import torresmon235.crystalgun.turrets.TurretWooden;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 public class CrystalGunClientProxy extends CrystalGunCommonProxy
-{
+{	
+	@Override
+	public void init()
+	{
+		GameRegistry.registerTileEntity(TileEntityMagicalFilter.class, "CGMagicalFilter");
+		GameRegistry.registerTileEntity(TileEntityCoreExtractor.class, "CGCoreExtractor");
+		GameRegistry.registerTileEntity(TileEntityCGCauldron.class, "CGCauldron");
+		GameRegistry.registerTileEntity(TileEntitySponge.class, "CGSponge");
+		GameRegistry.registerTileEntity(TileEntityMagicalSorter.class, "CGMagicalSorter");
+	}
+	
 	@Override
 	public void registerRenderThings()
 	{
@@ -84,16 +104,16 @@ public class CrystalGunClientProxy extends CrystalGunCommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoreExtractor.class, new RenderCoreExtractor());
 		RenderingRegistry.registerBlockHandler(new RenderCauldron());
 		
-		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGun.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/crystalgun.png"));
-		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGunAir.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/airgun.png"));
-		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGunFire.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/firegun.png"));
-		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGunGrass.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/grassgun.png"));
-		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGunHealing.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/healinggun.png"));
-		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGunIce.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/icegun.png"));
-		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGunLife.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/lifegun.png"));
-		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGunPoison.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/poisongun.png"));
-		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGunSand.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/sandgun.png"));
-		MinecraftForgeClient.registerItemRenderer(CrystalGunMain.CrystalGunWater.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/watergun.png"));
+		MinecraftForgeClient.registerItemRenderer(RegistryItems.CrystalGun.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/crystalgun.png"));
+		MinecraftForgeClient.registerItemRenderer(RegistryItems.CrystalGunAir.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/airgun.png"));
+		MinecraftForgeClient.registerItemRenderer(RegistryItems.CrystalGunFire.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/firegun.png"));
+		MinecraftForgeClient.registerItemRenderer(RegistryItems.CrystalGunGrass.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/grassgun.png"));
+		MinecraftForgeClient.registerItemRenderer(RegistryItems.CrystalGunHealing.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/healinggun.png"));
+		MinecraftForgeClient.registerItemRenderer(RegistryItems.CrystalGunIce.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/icegun.png"));
+		MinecraftForgeClient.registerItemRenderer(RegistryItems.CrystalGunLife.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/lifegun.png"));
+		MinecraftForgeClient.registerItemRenderer(RegistryItems.CrystalGunPoison.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/poisongun.png"));
+		MinecraftForgeClient.registerItemRenderer(RegistryItems.CrystalGunSand.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/sandgun.png"));
+		MinecraftForgeClient.registerItemRenderer(RegistryItems.CrystalGunWater.itemID, new RenderCrystalGun("/torresmon235/crystalgun/textures/crystalguns/watergun.png"));
 
 		TickRegistry.registerTickHandler(new CrystalGunClientTickHandler(), Side.CLIENT);
 	}

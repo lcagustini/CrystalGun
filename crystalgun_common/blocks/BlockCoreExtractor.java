@@ -15,33 +15,22 @@ package torresmon235.crystalgun.blocks;
 
 import java.util.Random;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import torresmon235.crystalgun.common.CrystalGunMain;
-import torresmon235.crystalgun.handlers.CrystalGunExtractorHandler;
-import torresmon235.crystalgun.handlers.CrystalGunParticleHandler;
-import torresmon235.crystalgun.library.RenderID;
-import torresmon235.crystalgun.tileentities.TileEntityCoreExtractor;
-
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityLavaFX;
-import net.minecraft.client.renderer.RenderGlobal;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import torresmon235.crystalgun.api.CrystalGunExtractorHandler;
+import torresmon235.crystalgun.handlers.CrystalGunParticleHandler;
+import torresmon235.crystalgun.library.RenderID;
+import torresmon235.crystalgun.registration.RegistryBlocks;
+import torresmon235.crystalgun.registration.RegistryItems;
+import torresmon235.crystalgun.tileentities.TileEntityCoreExtractor;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockCoreExtractor extends BlockContainer
 {
@@ -86,9 +75,36 @@ public class BlockCoreExtractor extends BlockContainer
     	return false;
     }
     
+    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) 
+    {
+    	try
+    	{
+    		EntityItem item = (EntityItem)entity;
+    		ItemStack stack = item.func_92014_d();
+	    	if(!world.isRemote)
+	    	{
+	    		if(stack != null)
+	    		{
+	    			if(CrystalGunExtractorHandler.spawnResult(world, stack, x + 0.5, y + 1, z + 0.5))
+	    			{
+	    				for(int i = 0; i < 4; i++)
+	    				{
+	    					CrystalGunParticleHandler.spawnParticle("Grass", x + 0.5, y + 0.5, z + 0.5, 0, 0, 0, 6, 255, 0);
+	    				}
+	    				world.playSoundEffect(x, y, z, "crystalgun.craft", 0.7565F, 1.0F + (float)Math.random() / 2);
+	    			}
+	    		}
+	    	}
+    	}
+    	catch(ClassCastException e)
+		{
+    		
+		}
+    }
+    
     public int idDropped(int par1, Random par2Random, int par3)
     {
-    	return CrystalGunMain.CoreExtractorItem.itemID;
+    	return RegistryItems.CoreExtractorItem.itemID;
     }
 
 	public boolean isOpaqueCube() 
@@ -120,7 +136,7 @@ public class BlockCoreExtractor extends BlockContainer
 	@SideOnly(Side.CLIENT)
 	public int idPicked(World par1World, int par2, int par3, int par4)
     {
-        return CrystalGunMain.CoreExtractorItem.itemID;
+        return RegistryItems.CoreExtractorItem.itemID;
     }
 	
 	private Class anEntityClass;

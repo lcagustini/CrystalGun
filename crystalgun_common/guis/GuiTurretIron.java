@@ -101,6 +101,13 @@ public class GuiTurretIron extends GuiScreen
 	@Override
 	protected void keyTyped(char par1, int par2)
 	{
-
+		super.keyTyped(par1, par2);
+		TurretIron turret = new TurretIron(world);
+		turret.setLocationAndAngles(x, y, z, MathHelper.wrapAngleTo180_float(Minecraft.getMinecraft().theWorld.rand.nextFloat() * 360.0F), 0.0F);
+		turret.rotationYawHead = turret.rotationYaw;
+        turret.renderYawOffset = turret.rotationYaw;
+		turret.initCreature();
+		turret.setTargetAndOwner(EntityMob.class, owner);
+		world.spawnEntityInWorld(turret);
 	}
 }

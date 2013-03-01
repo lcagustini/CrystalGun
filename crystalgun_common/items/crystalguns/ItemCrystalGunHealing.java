@@ -22,9 +22,10 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import torresmon235.crystalgun.api.ICrystalGun;
 import torresmon235.crystalgun.common.CrystalGunMain;
 import torresmon235.crystalgun.entities.EntityHealing;
-import torresmon235.crystalgun.interfaces.ICrystalGun;
+import torresmon235.crystalgun.registration.RegistryItems;
 
 public class ItemCrystalGunHealing extends Item implements ICrystalGun
 {
@@ -121,7 +122,7 @@ public class ItemCrystalGunHealing extends Item implements ICrystalGun
     		else
     		{
     			itemstack.damageItem(1, entityplayer);
-    			return new ItemStack(CrystalGunMain.CrystalGun, 1);
+    			return new ItemStack(RegistryItems.CrystalGun, 1);
     		}
     	}
     	return itemstack;

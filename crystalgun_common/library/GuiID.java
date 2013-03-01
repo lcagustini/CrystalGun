@@ -16,4 +16,5 @@ package torresmon235.crystalgun.library;
 public class GuiID 
 {
 	public static final int TurretIron = 0;
+	public static final int MagicalSorter = 1;
 }

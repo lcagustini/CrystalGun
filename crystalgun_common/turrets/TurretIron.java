@@ -27,6 +27,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import torresmon235.crystalgun.common.CrystalGunMain;
 import torresmon235.crystalgun.guis.GuiTurretIron;
@@ -35,7 +36,8 @@ import torresmon235.crystalgun.library.GuiID;
 public class TurretIron extends TurretParent implements IRangedAttackMob
 {	
     private EntityAIArrowAttack field_85037_d = new EntityAIArrowAttack(this, 0F, 4, 32.0F);
-    private EntityPlayer owner;
+    private String owner;
+    private Class target;
 	
 	public TurretIron(World world)
 	{
@@ -65,9 +67,10 @@ public class TurretIron extends TurretParent implements IRangedAttackMob
 	
 	public void setTargetAndOwner(Class target, EntityPlayer entityplayer)
 	{
-		this.owner = entityplayer;
+		this.owner = entityplayer.username;
         this.tasks.addTask(2, new EntityAIWatchClosest2(this, target, 32.0F, 0.02F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, target, 32.0F, 0, false));
+        this.target = target;
         this.updateAITasks();
 	}
 	
@@ -106,7 +109,7 @@ public class TurretIron extends TurretParent implements IRangedAttackMob
 	
 	public boolean interact(EntityPlayer entityplayer)
     {
-		if(!entityplayer.worldObj.isRemote && (owner == null || owner.username == entityplayer.username))
+		if(!entityplayer.worldObj.isRemote && (owner == null || owner == entityplayer.username))
 		{
 			GuiTurretIron.world = entityplayer.worldObj;
 			GuiTurretIron.x = this.posX;

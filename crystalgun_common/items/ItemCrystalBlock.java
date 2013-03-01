@@ -14,6 +14,7 @@
 package torresmon235.crystalgun.items;
 
 import torresmon235.crystalgun.common.CrystalGunMain;
+import torresmon235.crystalgun.registration.RegistryBlocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.relauncher.Side;
@@ -30,7 +31,7 @@ public class ItemCrystalBlock extends ItemBlock
 	@SideOnly(Side.CLIENT)
 	public int getIconFromDamage(int par1) //Gets the texture
 	{
-		return CrystalGunMain.CrystalBlock.getBlockTextureFromSideAndMetadata(2, par1);
+		return RegistryBlocks.CrystalBlock.getBlockTextureFromSideAndMetadata(2, par1);
 	}
 	public int getMetadata(int par1) //Returns the metadata value
 	{

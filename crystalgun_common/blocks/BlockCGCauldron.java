@@ -21,9 +21,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import torresmon235.crystalgun.api.CrystalGunCauldronHandler;
 import torresmon235.crystalgun.common.CrystalGunMain;
-import torresmon235.crystalgun.handlers.CrystalGunCauldronHandler;
 import torresmon235.crystalgun.library.RenderID;
+import torresmon235.crystalgun.registration.RegistryItems;
 import torresmon235.crystalgun.tileentities.TileEntityCGCauldron;
 
 import net.minecraft.block.Block;
@@ -152,7 +153,7 @@ public class BlockCGCauldron extends BlockContainer
 
                         if(var11 != 0)
                         {
-                        	if(Math.floor(Math.random()*4) == 2) te.addEffect(true, par2, par3, par4);
+                        	if(Math.floor(Math.random()*3) == 2) te.addNegEffect();
                         }
                         
                         par1World.setBlockMetadataWithNotify(par2, par3, par4, 3);
@@ -218,13 +219,13 @@ public class BlockCGCauldron extends BlockContainer
 
     public int idDropped(int par1, Random par2Random, int par3)
     {
-        return CrystalGunMain.CauldronItem.itemID;
+        return RegistryItems.CauldronItem.itemID;
     }
 
     @SideOnly(Side.CLIENT)
     public int idPicked(World par1World, int par2, int par3, int par4)
     {
-        return CrystalGunMain.CauldronItem.itemID;
+        return RegistryItems.CauldronItem.itemID;
     }
 
     public boolean hasTileEntity()

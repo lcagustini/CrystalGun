@@ -11,21 +11,34 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package torresmon235.crystalgun.common;
+package torresmon235.crystalgun.api;
 
-import torresmon235.crystalgun.registration.RegistryItems;
-import net.minecraft.creativetab.CreativeTabs;
+import java.util.ArrayList;
+
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 
-public class CrystalGunCreativeTab extends CreativeTabs
+public class CrystalGunSorterHandler 
 {
-	public CrystalGunCreativeTab(String label) 
+	private static ArrayList stringEntity = new ArrayList();
+	private static ArrayList entities = new ArrayList();
+	
+	public static void addEntity(String sentity, Class entity)
 	{
-	    super(label);
+		stringEntity.add(sentity);
+		entities.add(entity);
 	}
-	@Override
-	public ItemStack getIconItemStack() 
+	
+	public static Class getEntity(String sentity)
 	{
-	    return new ItemStack(RegistryItems.CrystalGun);
+		for(int i = 0; i < entities.size(); i++)
+		{
+			if(sentity.equals(stringEntity.get(i)))
+			{
+				return (Class) entities.get(i);
+			}
+		}
+		return null;
 	}
 }

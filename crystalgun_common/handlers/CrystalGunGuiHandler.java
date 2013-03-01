@@ -13,7 +13,9 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package torresmon235.crystalgun.handlers;
 
+import torresmon235.crystalgun.guis.ContainerMagicalSorter;
 import torresmon235.crystalgun.guis.ContainerTurretIron;
+import torresmon235.crystalgun.guis.GuiMagicalSorter;
 import torresmon235.crystalgun.guis.GuiTurretIron;
 import torresmon235.crystalgun.library.GuiID;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,6 +33,9 @@ public class CrystalGunGuiHandler implements IGuiHandler
 		case GuiID.TurretIron:
 			return new GuiTurretIron(player);
 
+		case GuiID.MagicalSorter:
+			return new GuiMagicalSorter(player);
+			
 		default:
 			return null;
 		}
@@ -44,6 +49,9 @@ public class CrystalGunGuiHandler implements IGuiHandler
 		case GuiID.TurretIron:
 			return new ContainerTurretIron();
 
+		case GuiID.MagicalSorter:
+			return new ContainerMagicalSorter();
+			
 		default:
 			return null;
 		}

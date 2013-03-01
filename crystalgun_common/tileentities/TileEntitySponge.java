@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 
 public class TileEntitySponge extends TileEntity
 {	
-	protected int range;
+	private int range;
 	
 	public TileEntitySponge(int Range)
 	{
@@ -47,5 +47,15 @@ public class TileEntitySponge extends TileEntity
 				}
 			}
     	}
+    }
+	
+	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
+    {
+		super.readFromNBT(par1NBTTagCompound);
+    }
+	
+	public void writeToNBT(NBTTagCompound par1NBTTagCompound)
+    {
+		super.writeToNBT(par1NBTTagCompound);
     }
 }

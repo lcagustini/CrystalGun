@@ -16,6 +16,7 @@ package torresmon235.crystalgun.items;
 import java.util.List;
 
 import torresmon235.crystalgun.common.CrystalGunMain;
+import torresmon235.crystalgun.registration.RegistryItems;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -87,22 +88,22 @@ public class ItemCrystal extends Item
 	
 	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
-		if(entityplayer.inventory.consumeInventoryItem(CrystalGunMain.CrystalGun.itemID))
+		if(entityplayer.inventory.consumeInventoryItem(RegistryItems.CrystalGun.itemID))
 		{
 			int meta = itemstack.getItemDamage();
 			int index = 448 - itemstack.stackSize * 7;
 			
 			switch(meta)
 			{
-			case 0:return new ItemStack(CrystalGunMain.CrystalGunWater, 1, index);
-			case 1:return new ItemStack(CrystalGunMain.CrystalGunFire, 1, index);
-			case 2:return new ItemStack(CrystalGunMain.CrystalGunAir, 1, index);
-			case 3:return new ItemStack(CrystalGunMain.CrystalGunIce, 1, index);
-			case 4:return new ItemStack(CrystalGunMain.CrystalGunSand, 1, index);
-			case 5:return new ItemStack(CrystalGunMain.CrystalGunLife, 1, index);
-			case 6:return new ItemStack(CrystalGunMain.CrystalGunGrass, 1, index);
-			case 7:return new ItemStack(CrystalGunMain.CrystalGunPoison, 1, index);
-			case 8:return new ItemStack(CrystalGunMain.CrystalGunHealing, 1, index);
+			case 0:return new ItemStack(RegistryItems.CrystalGunWater, 1, index);
+			case 1:return new ItemStack(RegistryItems.CrystalGunFire, 1, index);
+			case 2:return new ItemStack(RegistryItems.CrystalGunAir, 1, index);
+			case 3:return new ItemStack(RegistryItems.CrystalGunIce, 1, index);
+			case 4:return new ItemStack(RegistryItems.CrystalGunSand, 1, index);
+			case 5:return new ItemStack(RegistryItems.CrystalGunLife, 1, index);
+			case 6:return new ItemStack(RegistryItems.CrystalGunGrass, 1, index);
+			case 7:return new ItemStack(RegistryItems.CrystalGunPoison, 1, index);
+			case 8:return new ItemStack(RegistryItems.CrystalGunHealing, 1, index);
 			}
 		}
         return itemstack;

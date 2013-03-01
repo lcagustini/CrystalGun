@@ -26,9 +26,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ParticleHealing extends EntityFX
-{
-	private Tessellator tessellator1 = Tessellator.instance;
-	
+{	
 	public static int red;
 	public static int green;
 	public static int blue;
@@ -50,6 +48,7 @@ public class ParticleHealing extends EntityFX
 	
 	public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7)
 	{
+		Tessellator tessellator1 = Tessellator.instance;
 		tessellator1.draw();
 		tessellator1.startDrawingQuads();
 		tessellator1.setBrightness(getBrightnessForRender(par2));

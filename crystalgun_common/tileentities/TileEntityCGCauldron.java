@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-import torresmon235.crystalgun.handlers.CrystalGunCauldronHandler;
+import torresmon235.crystalgun.api.CrystalGunCauldronHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -58,8 +58,8 @@ public class TileEntityCGCauldron extends TileEntity
 							int ID = (Integer) Buffer.get(0);
 							int Amp = (Integer) Buffer.get(1);
 							int Dur = (Integer) Buffer.get(2);
-							if(Amp > 0 && Amp < 6) Amp += (Integer) result.get(1);
-							if(Dur > 0 && Dur < 14400) Dur += (Integer) result.get(2);
+							if(0 < Dur && Amp < 4) Amp += (Integer) result.get(1);
+							if(0 < Dur && Dur < 9800 && ID != 6 && ID != 7) Dur += (Integer) result.get(2);
 							Buffer.clear();
 							Buffer.add(ID);
 							Buffer.add(Amp);
@@ -70,7 +70,7 @@ public class TileEntityCGCauldron extends TileEntity
 					}
 					else if((Integer)result.get(0) > 0)
 					{
-						if(!Buffer.isEmpty()) addEffect(false, x, y, z);
+						if(!Buffer.isEmpty()) addEffect(x, y, z);
 						Buffer.clear();
 						for(int i = 0; i <= 2; i++) Buffer.add(result.get(i));
 						result.clear();
@@ -79,7 +79,7 @@ public class TileEntityCGCauldron extends TileEntity
 				}
 				else if(itemstack.getItem() == Item.bone) 
 				{
-					addEffect(false, x, y, z);
+					addEffect(x, y, z);
 					add = true;
 				}
 				else add = false;
@@ -96,22 +96,19 @@ public class TileEntityCGCauldron extends TileEntity
 		}
 	}
 	
-	public void addEffect(boolean noRandomNeg, int x, int y, int z)
+	public void addEffect(int x, int y, int z)
     {
     	Random random = new Random();
     	NBTTagCompound nbt = new NBTTagCompound();
     	
-		if(effectsnumber > 1 || noRandomNeg)
+		if(effectsnumber > 1)
 		{
-			if(random.nextInt(4) == 1 || noRandomNeg)
-			{
-				addNegEffect();
-			}
+			if(Math.floor(Math.random()*3) == 2) addNegEffect();
 		}
 		else
 		{
 			int ID = (Integer) Buffer.get(0);
-			int Amp = 1;
+			int Amp = (Integer) Buffer.get(1);
 			int Dur = (Integer) Buffer.get(2);
 
 			nbt.setByte("Id", (byte) ID);
@@ -120,9 +117,9 @@ public class TileEntityCGCauldron extends TileEntity
 			nbt.setBoolean("Ambient", false);
 			potion.appendTag(nbt);
 			effectsnumber++;
+			Buffer.clear();
 		}
 		Minecraft.getMinecraft().theWorld.playSound(x, y, z, "random.fizz", 1, 0, true);
-		Buffer.clear();
     }
 	
 	public void addNegEffect()
@@ -132,11 +129,12 @@ public class TileEntityCGCauldron extends TileEntity
     	
 		ArrayList neg = new ArrayList<Integer>(Arrays.asList(2, 4, 7, 9, 15, 17, 18, 19, 20));
 		nbt.setByte("Id", (byte) ((int)((Integer) neg.get(random.nextInt(9)))));
-		nbt.setByte("Amplifier", (byte) 0);
+		nbt.setByte("Amplifier", (byte) random.nextInt(2));
 		nbt.setInteger("Duration", random.nextInt(400)+440);
 		nbt.setBoolean("Ambient", false);
 		potion.appendTag(nbt);
 		effectsnumber++;
+		Buffer.clear();
     }
 	
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
